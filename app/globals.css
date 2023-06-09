@@ -3,11 +3,3 @@
 @tailwind utilities;
 
 @import './ui-editor/style.css';
-
-.remirror-editor-wrapper {
-  height: 100%;
-}
-
-.remirror-editor-wrapper .prose {
-  max-width: none; 
-}

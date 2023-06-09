@@ -33,15 +33,40 @@ import { EditorToolbar, EditorToolbarProps } from "../ui-editor-toolbar";
 
 export type MarkdownEditorProps = {
   placeholder?: string;
-  theme?: UseThemeProps["theme"];
-  initialContent?: RemirrorProps["initialContent"];
-  editable?: RemirrorProps["editable"];
-  autoFocus?: RemirrorProps["autoFocus"];
-  hooks?: RemirrorProps["hooks"];
   toolbarProps?: EditorToolbarProps;
-};
+  theme?: UseThemeProps["theme"];
+} & Omit<RemirrorProps<MarktionExtensions[number]>, "manager">;
 
 export type MarkdownEditorRef = UseRemirrorReturn<ReactExtensions<any>>;
+export type MarktionExtensions = ReturnType<typeof createExtensions>;
+
+const createExtensions = (placeholder?: string) => {
+  return [
+    new LinkExtension({ autoLink: true }),
+    new PlaceholderExtension({ placeholder }),
+    new BoldExtension(),
+    new StrikeExtension(),
+    new ItalicExtension(),
+    new HeadingExtension(),
+    new BlockquoteExtension(),
+    new BulletListExtension({ enableSpine: true }),
+    new OrderedListExtension(),
+    new ListItemExtension({
+      priority: ExtensionPriority.High,
+      enableCollapsible: true,
+    }),
+    new CodeExtension(),
+    new CodeBlockExtension({ supportedLanguages: [jsx, typescript] }),
+    new TrailingNodeExtension(),
+    new TableExtension(),
+    new MarkdownExtension({ copyAsMarkdown: false }),
+    /**
+     * `HardBreakExtension` allows us to create a newline inside paragraphs.
+     * e.g. in a list item
+     */
+    new HardBreakExtension(),
+  ];
+};
 
 /**
  * The editor which is used to create the annotation. Supports formatting.
@@ -51,31 +76,7 @@ export const MarkdownEditor = React.forwardRef<
   React.PropsWithChildren<MarkdownEditorProps>
 >(({ placeholder, children, theme, toolbarProps, ...rest }, ref) => {
   const extensions = useCallback(
-    () => [
-      new LinkExtension({ autoLink: true }),
-      new PlaceholderExtension({ placeholder }),
-      new BoldExtension(),
-      new StrikeExtension(),
-      new ItalicExtension(),
-      new HeadingExtension(),
-      new BlockquoteExtension(),
-      new BulletListExtension({ enableSpine: true }),
-      new OrderedListExtension(),
-      new ListItemExtension({
-        priority: ExtensionPriority.High,
-        enableCollapsible: true,
-      }),
-      new CodeExtension(),
-      new CodeBlockExtension({ supportedLanguages: [jsx, typescript] }),
-      new TrailingNodeExtension(),
-      new TableExtension(),
-      new MarkdownExtension({ copyAsMarkdown: false }),
-      /**
-       * `HardBreakExtension` allows us to create a newline inside paragraphs.
-       * e.g. in a list item
-       */
-      new HardBreakExtension(),
-    ],
+    () => createExtensions(placeholder),
     [placeholder]
   );
 
@@ -96,6 +97,7 @@ export const MarkdownEditor = React.forwardRef<
         "h-full",
         "p-3",
         "prose",
+        "min-h-[200px]",
         "shadow-md",
         "outline-none",
         "rounded",
