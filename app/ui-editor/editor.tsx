@@ -29,7 +29,7 @@ import {
   TrailingNodeExtension,
 } from "remirror/extensions";
 import { EditorComponent, Remirror, useRemirror } from "@remirror/react";
-import { EditorToolbar } from "../ui-editor-toolbar";
+import { EditorToolbar, EditorToolbarProps } from "../ui-editor-toolbar";
 
 export type MarkdownEditorProps = {
   placeholder?: string;
@@ -38,6 +38,7 @@ export type MarkdownEditorProps = {
   editable?: RemirrorProps["editable"];
   autoFocus?: RemirrorProps["autoFocus"];
   hooks?: RemirrorProps["hooks"];
+  toolbarProps?: EditorToolbarProps;
 };
 
 export type MarkdownEditorRef = UseRemirrorReturn<ReactExtensions<any>>;
@@ -48,7 +49,7 @@ export type MarkdownEditorRef = UseRemirrorReturn<ReactExtensions<any>>;
 export const MarkdownEditor = React.forwardRef<
   MarkdownEditorRef,
   React.PropsWithChildren<MarkdownEditorProps>
->(({ placeholder, children, theme, ...rest }, ref) => {
+>(({ placeholder, children, theme, toolbarProps, ...rest }, ref) => {
   const extensions = useCallback(
     () => [
       new LinkExtension({ autoLink: true }),
@@ -104,7 +105,7 @@ export const MarkdownEditor = React.forwardRef<
       autoFocus
       {...rest}
     >
-      <EditorToolbar />
+      <EditorToolbar {...toolbarProps} />
 
       <EditorComponent />
       {children}
@@ -112,8 +113,8 @@ export const MarkdownEditor = React.forwardRef<
   );
 });
 
-export function MarktionEditor(props: { basicContent?: string }) {
+export function MarktionEditor(props: MarkdownEditorProps) {
   const ref = useRef<MarkdownEditorRef>(null);
 
-  return <MarkdownEditor ref={ref} initialContent={props.basicContent} />;
+  return <MarkdownEditor ref={ref} {...props} />;
 }

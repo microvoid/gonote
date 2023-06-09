@@ -17,7 +17,11 @@ import {
 } from "remirror/extensions";
 import { useCallback, useMemo } from "react";
 
-export function EditorToolbar() {
+export type EditorToolbarProps = {
+  suffix?: React.ReactNode;
+};
+
+export function EditorToolbar(props: EditorToolbarProps) {
   const { toggleBold } = useCommands<BoldExtension>();
   const { toggleItalic } = useCommands<ItalicExtension>();
   const { toggleStrike } = useCommands<StrikeExtension>();
@@ -151,20 +155,7 @@ export function EditorToolbar() {
         </Toolbar.ToggleItem>
       </Toolbar.ToggleGroup>
       <Toolbar.Separator className="w-[1px] bg-mauve6 mx-[10px]" />
-      <Toolbar.Link
-        className="bg-transparent text-mauve11 inline-flex justify-center items-center hover:bg-transparent hover:cursor-pointer flex-shrink-0 flex-grow-0 basis-auto h-[25px] px-[5px] rounded text-[13px] leading-none  ml-0.5 outline-none hover:bg-violet3 hover:text-violet11 focus:relative focus:shadow-[0_0_0_2px] focus:shadow-violet7 first:ml-0 data-[state=on]:bg-secondary data-[state=on]:text-secondary-content"
-        href="#"
-        target="_blank"
-        style={{ marginRight: 10 }}
-      >
-        Edited 2 hours ago
-      </Toolbar.Link>
-      <Toolbar.Button
-        className="px-[10px] text-primary-content bg-primary flex-shrink-0 flex-grow-0 basis-auto h-[25px] rounded inline-flex text-[13px] leading-none items-center justify-center outline-none hover:bg-violet10 focus:relative focus:shadow-[0_0_0_2px] focus:shadow-violet7"
-        style={{ marginLeft: "auto" }}
-      >
-        Share
-      </Toolbar.Button>
+      {props.suffix}
     </Toolbar.Root>
   );
 }

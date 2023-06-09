@@ -1,2 +1,2 @@
-export * from "./handler";
+export * as ApiHandler from "./handler";
 export * from "./options";

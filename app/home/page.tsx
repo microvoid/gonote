@@ -17,7 +17,7 @@ export default function Home() {
     <>
       <OSS />
 
-      <ShareEditor basicContent={InitMarkdownContent} />
+      <ShareEditor initialContent={InitMarkdownContent} />
 
       {/* <Hero /> */}
     </>

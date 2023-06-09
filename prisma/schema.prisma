@@ -44,6 +44,8 @@ model User {
 
   SentEmail SentEmail[]
   Post      Post[]
+
+  anonymous Boolean @default(false)
 }
 
 model Session {
@@ -101,7 +103,7 @@ model ProjectUsers {
 
 model Post {
   id          String          @id @default(cuid())
-  slug        String?
+  slug        String?         @unique
   title       String?
   html        String?         @db.LongText
   markdown    String          @db.LongText
@@ -118,6 +120,8 @@ model Post {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([projectId, id, slug])
 }
 
 enum PostPublicStats {
