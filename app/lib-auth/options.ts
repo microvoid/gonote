@@ -13,14 +13,14 @@ export const options: NextAuthOptions = {
       clientId: process.env.GITHUB_ID!,
       clientSecret: process.env.GITHUB_SECRET!,
     }),
-    EmailProvider({
-      sendVerificationRequest({ identifier, url }) {
-        sendRegisterEmail({
-          to: identifier,
-          url,
-        });
-      },
-    }),
+    // EmailProvider({
+    //   sendVerificationRequest({ identifier, url }) {
+    //     sendRegisterEmail({
+    //       to: identifier,
+    //       url,
+    //     });
+    //   },
+    // }),
   ],
   adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt" },

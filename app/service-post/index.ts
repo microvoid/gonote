@@ -3,18 +3,36 @@ import { Post } from "@prisma/client";
 import { prisma } from "../lib-prisma";
 import { ApiHandler } from "../lib-auth";
 
-export const postAnonymousPost = ApiHandler.anonymous(
-  async (req, res, user) => {
-    const { markdown, slug = nanoid() } = req.body as Post;
+export async function upsertPost(req: Request) {
+  const session = await ApiHandler.session();
 
-    const post = await prisma.post.create({
+  if (!session) {
+    return createAnonymousPost(req);
+  }
+}
+
+export const createAnonymousPost = ApiHandler.anonymous(async (req, user) => {
+  const { markdown, slug = nanoid(10), id } = (await req.json()) as Post;
+
+  if (id) {
+    const post = await prisma.post.update({
       data: {
         markdown,
-        slug,
-        userId: user.id,
+      },
+      where: {
+        id,
       },
     });
 
-    return ApiHandler.success(res, post);
+    return ApiHandler.success(post);
+  } else {
+    const post = await prisma.post.create({
+      data: {
+        slug,
+        markdown,
+      },
+    });
+
+    return ApiHandler.success(post);
   }
-);
+});

@@ -1,3 +1,3 @@
-import { postAnonymousPost } from "@/app/service-post";
+import { upsertPost } from "@/app/service-post";
 
-export const POST = postAnonymousPost;
+export const POST = upsertPost;

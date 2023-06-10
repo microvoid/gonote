@@ -3,12 +3,37 @@
 import fetch from "axios";
 import * as Toolbar from "@radix-ui/react-toolbar";
 import { MarktionEditor } from "../ui-editor";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { debounce } from "lodash";
+import { Post } from "@prisma/client";
 
 export function ShareEditor(props: { initialContent?: string }) {
   const [postId, setPostId] = useState<string | null>(null);
+  const [slug, setSlug] = useState<string | null>(null);
 
   const isDraftEditor = Boolean(postId);
+
+  const onUpdateOrCreatePost = useMemo(
+    () =>
+      debounce(async (markdown: string) => {
+        const res = await fetch({
+          url: "/api/post",
+          method: "post",
+          data: {
+            id: postId,
+            markdown,
+          },
+        });
+
+        const post: Post = res.data.data;
+
+        if (!postId) {
+          setPostId(post.id);
+          setSlug(post.slug);
+        }
+      }, 1000),
+    [postId]
+  );
 
   const toolbarSuffixNode = (
     <>
@@ -19,7 +44,7 @@ export function ShareEditor(props: { initialContent?: string }) {
           target="_blank"
           style={{ marginRight: 10 }}
         >
-          https://{location.host}/post/{postId}
+          https://{location.host}/m/{slug}
         </Toolbar.Link>
       )}
 
@@ -38,7 +63,9 @@ export function ShareEditor(props: { initialContent?: string }) {
         placeholder="Edit markdown..."
         onChange={({ tr, helpers }) => {
           if (tr?.docChanged) {
-            console.log("changed", helpers, helpers.getMarkdown());
+            const markdown = helpers.getMarkdown();
+
+            onUpdateOrCreatePost(markdown);
           }
         }}
         toolbarProps={{

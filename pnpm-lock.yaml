@@ -10,6 +10,7 @@ specifiers:
   '@remirror/react-editors': ^1.0.34
   '@remirror/styles': ^2.0.5
   '@tailwindcss/typography': ^0.5.9
+  '@types/lodash': ^4.14.195
   '@types/node': 20.2.5
   '@types/react': 18.2.8
   '@types/react-dom': 18.2.4
@@ -18,6 +19,7 @@ specifiers:
   daisyui: ^3.0.3
   eslint: 8.42.0
   eslint-config-next: 13.4.4
+  lodash: ^4.17.21
   lucide-react: ^0.233.0
   nanoid: ^4.0.2
   next: 13.4.4
@@ -44,6 +46,7 @@ dependencies:
   '@remirror/react': 2.0.28_s7suvwzpwgt2sj34ffd7d62toi
   '@remirror/react-editors': 1.0.34_s7suvwzpwgt2sj34ffd7d62toi
   '@remirror/styles': 2.0.5_i2bxsyfskhzbpjanbovidbfj7u
+  '@types/lodash': 4.14.195
   '@types/node': 20.2.5
   '@types/react': 18.2.8
   '@types/react-dom': 18.2.4
@@ -51,6 +54,7 @@ dependencies:
   axios: 1.4.0
   eslint: 8.42.0
   eslint-config-next: 13.4.4_tizxnkcvjrb4cldxgwq5h3lj5u
+  lodash: 4.17.21
   lucide-react: 0.233.0_react@18.2.0
   nanoid: 4.0.2
   next: 13.4.4_biqbaboplfbrettd7655fr4n2y
@@ -4122,6 +4126,10 @@ packages:
 
   /@types/json5/0.0.29:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
+    dev: false
+
+  /@types/lodash/4.14.195:
+    resolution: {integrity: sha512-Hwx9EUgdwf2GLarOjQp5ZH8ZmblzcbTBC2wtQWNKARBSxM9ezRIAUpeDTgoQRAFB0+8CNWXVA9+MaSOzOF3nPg==}
     dev: false
 
   /@types/marked/4.3.1:
