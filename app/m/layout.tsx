@@ -1,3 +1,3 @@
 export default function Layout(props: React.PropsWithChildren<{}>) {
-  return <div className="flex min-h-screen flex-col">{props.children}</div>;
+  return <div className="min-h-screen">{props.children}</div>;
 }

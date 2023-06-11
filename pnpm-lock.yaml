@@ -21,6 +21,7 @@ specifiers:
   autoprefixer: 10.4.14
   axios: ^1.4.0
   daisyui: ^3.0.3
+  dayjs: ^1.11.8
   eslint: 8.42.0
   eslint-config-next: 13.4.4
   file-saver: ^2.0.5
@@ -60,6 +61,7 @@ dependencies:
   '@types/react-dom': 18.2.4
   autoprefixer: 10.4.14_postcss@8.4.24
   axios: 1.4.0
+  dayjs: 1.11.8
   eslint: 8.42.0
   eslint-config-next: 13.4.4_tizxnkcvjrb4cldxgwq5h3lj5u
   file-saver: 2.0.5
@@ -4881,6 +4883,10 @@ packages:
       abab: 2.0.6
       whatwg-mimetype: 3.0.0
       whatwg-url: 12.0.1
+    dev: false
+
+  /dayjs/1.11.8:
+    resolution: {integrity: sha512-LcgxzFoWMEPO7ggRv1Y2N31hUf2R0Vj7fuy/m+Bg1K8rr+KAs1AEy4y9jd5DXe8pbHgX+srkHNS7TH6Q6ZhYeQ==}
     dev: false
 
   /debug/3.2.7:
