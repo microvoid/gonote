@@ -1,17 +1,28 @@
 import { NextAuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import EmailProvider from "next-auth/providers/email";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "@/app/model";
 import { sendRegisterEmail } from "@/app/email";
+import { createGuest } from "../model-user";
 
 const VERCEL_DEPLOYMENT = !!process.env.VERCEL_URL;
 
 export const options: NextAuthOptions = {
+  secret: process.env.AUTH_SECRET,
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_ID!,
       clientSecret: process.env.GITHUB_SECRET!,
+    }),
+    CredentialsProvider({
+      credentials: {},
+      async authorize(credentials, req) {
+        const user = await createGuest();
+
+        return user;
+      },
     }),
     // EmailProvider({
     //   sendVerificationRequest({ identifier, url }) {
@@ -32,7 +43,7 @@ export const options: NextAuthOptions = {
         sameSite: "lax",
         path: "/",
         // When working on localhost, the cookie domain must be omitted entirely (https://stackoverflow.com/a/1188145)
-        domain: VERCEL_DEPLOYMENT ? ".dub.sh" : undefined,
+        domain: VERCEL_DEPLOYMENT ? ".marktion.io" : undefined,
         secure: VERCEL_DEPLOYMENT,
       },
     },
@@ -42,10 +53,34 @@ export const options: NextAuthOptions = {
   },
   callbacks: {
     signIn({ user, account, profile }) {
-      if (account?.provider === "google") {
+      return true;
+    },
+
+    jwt: async ({ token, user, trigger, session }) => {
+      if (user) {
+        token.user = user;
       }
 
-      return true;
+      if (trigger === "update") {
+        const refreshedUser = await prisma.user.findUnique({
+          where: { id: token.sub },
+        });
+
+        token.user = refreshedUser;
+        token.name = refreshedUser?.name;
+        token.email = refreshedUser?.email;
+        token.image = refreshedUser?.image;
+      }
+
+      return token;
+    },
+    session: async ({ session, token }) => {
+      session.user = {
+        // @ts-ignore
+        id: token.sub,
+        ...session.user,
+      };
+      return session;
     },
   },
 };

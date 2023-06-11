@@ -1,3 +1,5 @@
 import { upsertPost } from "@/app/service-post";
 
-export const POST = upsertPost;
+export const POST = async (req: Request) => {
+  return upsertPost(req);
+};

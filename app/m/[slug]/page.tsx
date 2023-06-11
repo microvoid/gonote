@@ -4,7 +4,7 @@ import { TimerIcon, StarIcon, StarFilledIcon } from "@radix-ui/react-icons";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { MarktionSSR } from "../../ui-editor";
 import { PostModel } from "@/app/model";
-import { Post } from "@prisma/client";
+import { Post, User } from "@prisma/client";
 
 dayjs.extend(relativeTime);
 
@@ -20,7 +20,7 @@ export default async function MarkdownPreviewPage({
     <>
       <div className="py-6">
         {renderTitle(post)}
-        {renderTitleDesc(post)}
+        {renderTitleDesc(post, post.user!)}
       </div>
 
       <MarktionSSR initialContent={post?.markdown} />
@@ -41,7 +41,7 @@ const renderTitle = (post: Post) => {
   return <h1 className="text-4xl mb-2 font-extrabold">{post.title}</h1>;
 };
 
-const renderTitleDesc = (post: Post) => {
+const renderTitleDesc = (post: Post, user: User) => {
   const isStar = false;
 
   return (
@@ -49,15 +49,15 @@ const renderTitleDesc = (post: Post) => {
       <div className="flex items-center">
         <Image
           className="w-[32px] h-[32px] rounded-full mr-2"
-          src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80"
-          alt="user name"
+          src={`https://avatar.marktion.cn/api/avatar/${user.id}?t=window&s=128`}
+          alt={user.name!}
           width={128}
           height={128}
         />
         <div>
-          <div className=" text-slate-800">nickname</div>
+          <div className=" text-slate-800">{user.name}</div>
           <div className="text-sm">
-            <TimerIcon className="mr-1 inline" />{" "}
+            <TimerIcon className="mr-1 inline" />
             {dayjs(post.createdAt).fromNow()}
           </div>
         </div>

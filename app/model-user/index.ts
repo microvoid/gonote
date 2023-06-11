@@ -8,22 +8,12 @@ export const isUserExists = (email: string) =>
     },
   });
 
-export const getAnonymousUser = async () => {
-  let user = await prisma.user.findFirst({
-    where: {
+export const createGuest = () => {
+  return prisma.user.create({
+    data: {
+      id: nanoid(),
+      name: "anonymous",
       anonymous: true,
     },
   });
-
-  if (!user) {
-    user = await prisma.user.create({
-      data: {
-        id: nanoid(),
-        name: "anonymous",
-        anonymous: true,
-      },
-    });
-  }
-
-  return user;
 };

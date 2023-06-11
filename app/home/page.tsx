@@ -12,7 +12,7 @@ const InitMarkdownContent = fs.readFileSync("./README.md", {
   encoding: "utf-8",
 });
 
-export default function Home() {
+export default async function Home() {
   return (
     <>
       <OSS />

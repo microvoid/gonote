@@ -2,12 +2,13 @@
 
 import fetch from "axios";
 import * as Toolbar from "@radix-ui/react-toolbar";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { debounce } from "lodash";
 import { Post } from "@prisma/client";
 import { DownloadIcon, UpdateIcon } from "@radix-ui/react-icons";
 import { MarktionEditor } from "../ui-editor";
 import { downloadFile } from "../utils/file";
+import { signInWithGuest } from "../lib-auth/signIn";
 
 export function ShareEditor(props: { initialContent?: string }) {
   const [postId, setPostId] = useState<string | null>(null);
@@ -16,6 +17,10 @@ export function ShareEditor(props: { initialContent?: string }) {
   const [isSaving, setIsSaving] = useState(false);
 
   const isDraftEditor = Boolean(postId);
+
+  useEffect(() => {
+    signInWithGuest();
+  }, []);
 
   const onUpdateOrCreatePost = useMemo(
     () =>

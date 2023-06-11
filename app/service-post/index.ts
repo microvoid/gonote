@@ -3,15 +3,7 @@ import { Post } from "@prisma/client";
 import { prisma } from "../lib-prisma";
 import { ApiHandler } from "../lib-auth";
 
-export async function upsertPost(req: Request) {
-  const session = await ApiHandler.session();
-
-  if (!session) {
-    return createAnonymousPost(req);
-  }
-}
-
-export const createAnonymousPost = ApiHandler.anonymous(async (req, user) => {
+export const upsertPost = ApiHandler.auth(async (req, session) => {
   const { markdown, slug = nanoid(10), id } = (await req.json()) as Post;
 
   if (id) {
@@ -30,6 +22,7 @@ export const createAnonymousPost = ApiHandler.anonymous(async (req, user) => {
       data: {
         slug,
         markdown,
+        userId: session.user.id,
       },
     });
 
