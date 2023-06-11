@@ -16,18 +16,18 @@ export function OSS() {
       <div className="mx-auto mt-10 flex max-w-fit space-x-4">
         <a
           href="https://marktion.io/register"
-          className="rounded-full border border-black bg-black px-5 py-2 text-sm text-white shadow-lg transition-all hover:bg-white hover:text-black"
+          className="rounded-full border border-primary bg-primary px-5 py-2 text-sm text-primary-content shadow-lg transition-all hover:bg-white hover:text-primary"
         >
           Start For Free
         </a>
 
         <a
-          className="flex items-center justify-center space-x-2 rounded-full border border-gray-300 bg-white px-5 py-2 shadow-lg transition-all hover:border-gray-800"
+          className="flex items-center justify-center space-x-2 rounded-full border border-gray-300 bg-white px-5 py-2 shadow-lg transition-all hover:border-primary hover:text-primary"
           href="https://github.com/microvoid/marktion"
           target="_blank"
           rel="noreferrer"
         >
-          <GitHubLogoIcon className="h-5 w-5 text-black" />
+          <GitHubLogoIcon className="h-5 w-5" />
           <p className="text-sm">Star on GitHub</p>
         </a>
       </div>
