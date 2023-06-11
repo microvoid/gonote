@@ -42,14 +42,14 @@ export function ShareEditor(props: { initialContent?: string }) {
     downloadFile(`${slug || "marktion"}.md`, draft);
   };
 
-  const postUrl = `https://${location.host}/m/${slug}`;
+  const postUrl = `${location.origin}/m/${slug}`;
 
   const toolbarSuffixNode = (
     <>
       {isDraftEditor && (
         <Toolbar.Link
           className="bg-transparent text-mauve11 inline-flex justify-center items-center hover:bg-transparent hover:cursor-pointer flex-shrink-0 flex-grow-0 basis-auto h-[25px] px-[5px] rounded text-[13px] leading-none  ml-0.5 outline-none hover:bg-violet3 hover:text-violet11 focus:relative focus:shadow-[0_0_0_2px] focus:shadow-violet7 first:ml-0 data-[state=on]:bg-secondary data-[state=on]:text-secondary-content"
-          href="postUrl"
+          href={postUrl}
           target="_blank"
           style={{ marginRight: 10 }}
         >
