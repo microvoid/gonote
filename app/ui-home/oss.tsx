@@ -1,4 +1,5 @@
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
+import { SignUp } from "./signup-client";
 
 export function OSS() {
   return (
@@ -14,12 +15,7 @@ export function OSS() {
       </div>
 
       <div className="mx-auto mt-10 flex max-w-fit space-x-4">
-        <a
-          href="https://marktion.io/register"
-          className="rounded-full border border-primary bg-primary px-5 py-2 text-sm text-primary-content shadow-lg transition-all hover:bg-white hover:text-primary"
-        >
-          Start For Free
-        </a>
+        <SignUp />
 
         <a
           className="flex items-center justify-center space-x-2 rounded-full border border-gray-300 bg-white px-5 py-2 shadow-lg transition-all hover:border-primary hover:text-primary"
