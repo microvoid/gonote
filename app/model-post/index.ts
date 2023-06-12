@@ -10,3 +10,17 @@ export const getPostBySlug = async (slug: string) => {
     },
   });
 };
+
+export const getUserPosts = async (userId: string) => {
+  return prisma.post.findMany({
+    where: {
+      userId,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: {
+      user: true,
+    },
+  });
+};

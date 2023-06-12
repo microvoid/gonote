@@ -2,6 +2,7 @@ import { nanoid } from "nanoid";
 import { Post } from "@prisma/client";
 import { prisma } from "../lib-prisma";
 import { ApiHandler } from "../lib-auth";
+import { PostModel } from "../model";
 
 export const upsertPost = ApiHandler.auth(async (req, session) => {
   const { markdown, slug = nanoid(10), id } = (await req.json()) as Post;
@@ -28,4 +29,8 @@ export const upsertPost = ApiHandler.auth(async (req, session) => {
 
     return ApiHandler.success(post);
   }
+});
+
+export const getUserPosts = ApiHandler.auth(async (req, session) => {
+  return PostModel.getUserPosts(session.user.id);
 });

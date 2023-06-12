@@ -86,7 +86,7 @@ export function ShareEditor(props: { initialContent?: string }) {
   );
 
   return (
-    <div className="p-5 mx-auto md:w-[768px] sm:w-3/4">
+    <div className="p-5 mx-auto md:w-[768px]">
       <MarktionEditor
         placeholder="Edit markdown..."
         onChange={({ tr, helpers }) => {
