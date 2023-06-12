@@ -1,10 +1,7 @@
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
 import { Post, User } from "@prisma/client";
 import { TimerIcon, StarIcon, StarFilledIcon } from "@radix-ui/react-icons";
 import { UserAvatar } from "./avatar";
-
-dayjs.extend(relativeTime);
+import { fromNow } from "../utils/time";
 
 export const renderTitle = (post: Post) => {
   return <h1 className="text-2xl mb-2 font-extrabold">{post.title}</h1>;
@@ -22,7 +19,7 @@ export const renderTitleDesc = (post: Post, user: User) => {
           <div className=" text-slate-800 font-semibold">{user.name}</div>
           <div className="text-xs flex">
             <TimerIcon className="mr-1 inline" />
-            {dayjs(post.createdAt).fromNow()}
+            {fromNow(post.createdAt)}
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { ApiHandler } from "../lib-auth";
 import { PostModel } from "../model";
-import { PostCollapse } from "../ui-post/post-collapse";
+import { Posts } from "../ui-post/post-list";
 
 export default async function Dashboard() {
   const session = await ApiHandler.session();
@@ -8,9 +8,7 @@ export default async function Dashboard() {
 
   return (
     <div className="p-5 mx-auto md:w-[768px]">
-      {posts.map(item => {
-        return <PostCollapse post={item} user={item.user!} />;
-      })}
+      <Posts posts={posts} />
     </div>
   );
 }

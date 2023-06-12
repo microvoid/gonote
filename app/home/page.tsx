@@ -1,4 +1,3 @@
-import * as fs from "fs";
 import dynamic from "next/dynamic";
 
 import { Hero } from "../ui-home/hero";
@@ -9,10 +8,6 @@ const ShareEditor = dynamic(() => import("../ui-home/share-editor"), {
   ssr: false,
 });
 
-const InitMarkdownContent = fs.readFileSync("./README.md", {
-  encoding: "utf-8",
-});
-
 export default async function Home() {
   return (
     <>
@@ -20,7 +15,7 @@ export default async function Home() {
 
       <OSS />
 
-      <ShareEditor initialContent={InitMarkdownContent} />
+      <ShareEditor />
 
       {/* <Hero /> */}
     </>
