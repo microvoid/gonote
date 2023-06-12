@@ -68,6 +68,8 @@ export const RemirrorEditor = React.forwardRef<
   );
 });
 
+RemirrorEditor.displayName = "RemirrorEditor";
+
 export function MarktionEditor(props: MarkdownEditorProps) {
   const ref = useRef<MarkdownEditorRef>(null);
 
