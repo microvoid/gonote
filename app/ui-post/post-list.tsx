@@ -32,7 +32,7 @@ export function Posts({ posts }: PostsProps) {
       aria-labelledby="posts"
       color="default"
       fullWidth
-      radius="xl"
+      radius="md"
       shadow="lg"
     >
       <TableHeader columns={columns}>
@@ -46,7 +46,7 @@ export function Posts({ posts }: PostsProps) {
         )}
       </TableHeader>
 
-      <TableBody items={posts}>
+      <TableBody items={posts} emptyContent="No posts to display.">
         {item => (
           <TableRow key={item.id}>
             {columnKey => (

@@ -53,7 +53,7 @@ export const RemirrorEditor = React.forwardRef<
         "min-h-[200px]",
         "shadow-md",
         "outline-none",
-        "rounded",
+        "rounded-md",
         "border",
         "overflow-auto",
       ]}
