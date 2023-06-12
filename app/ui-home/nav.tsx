@@ -2,7 +2,10 @@
 
 import { DashboardIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
+import { siteConstants } from "../constants";
 // import { SignUp } from "./signup-client";
+
+const brand = siteConstants.brand.toUpperCase();
 
 export function Nav() {
   return (
@@ -11,7 +14,7 @@ export function Nav() {
         className="bg-gradient-to-r from-gray-800 via-gray-500 to-gray-800 bg-clip-text font-display text-xl sm:text-2xl font-extrabold leading-tight text-transparent sm:leading-tight"
         href={"/"}
       >
-        MARKTION.IO
+        {brand}
       </Link>
 
       <div className="hidden items-center space-x-6 sm:flex">

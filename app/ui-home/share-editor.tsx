@@ -9,6 +9,7 @@ import { DownloadIcon, UpdateIcon } from "@radix-ui/react-icons";
 import { MarkdownEditorProps, MarktionEditor } from "../ui-editor";
 import { downloadFile } from "../utils/file";
 import { signInWithGuest } from "../lib-auth/signIn";
+import { siteConstants } from "../constants";
 
 export function ShareEditor(props: MarkdownEditorProps) {
   const [postId, setPostId] = useState<string | null>(null);
@@ -54,7 +55,7 @@ export function ShareEditor(props: MarkdownEditorProps) {
   );
 
   const onExportMarkdown = () => {
-    downloadFile(`${slug || "marktion"}.md`, draft);
+    downloadFile(`${slug || siteConstants.brand}.md`, draft);
   };
 
   const postUrl = `${location.origin}/m/${slug}`;
