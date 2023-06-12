@@ -1,3 +1,3 @@
 export const siteConstants = {
-  brand: process.env.BRAND || "marktion",
+  brand: process.env.NEXT_PUBLIC_BRAND || "marktion",
 };
