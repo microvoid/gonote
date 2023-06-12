@@ -8,7 +8,7 @@ export default async function Dashboard() {
 
   return (
     <div className="p-5 mx-auto md:w-[768px]">
-      <Posts posts={posts} />
+      <Posts defaultPosts={posts} />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { DashboardIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 // import { SignUp } from "./signup-client";
 
@@ -18,7 +19,7 @@ export function Nav() {
           href="/dashboard"
           className="rounded-md text-sm font-medium text-gray-500 transition-colors ease-out hover:text-black"
         >
-          dashboard
+          <DashboardIcon />
         </Link>
         {/* <SignUp /> */}
       </div>

@@ -3,21 +3,22 @@ import { getServerSession } from "next-auth";
 import { options } from "./options";
 import { NextResponse } from "next/server";
 
-type Authhandler = (req: Request, session: Session) => any;
+type Authhandler = (req: Request, ctx: any, session: Session) => any;
 
 export const session = () => {
   return getServerSession(options) as Promise<Session | null>;
 };
 
-export const auth = (handler: Authhandler) => async (req: Request) => {
-  const userSession = await session();
+export const auth =
+  (handler: Authhandler) => async (req: Request, ctx: any) => {
+    const userSession = await session();
 
-  if (!userSession) {
-    return unauthorized();
-  }
+    if (!userSession) {
+      return unauthorized();
+    }
 
-  return handler(req, userSession!);
-};
+    return handler(req, ctx, userSession!);
+  };
 
 export const success = (data: any) => {
   return NextResponse.json({

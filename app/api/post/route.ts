@@ -1,5 +1,4 @@
-import { upsertPost } from "@/app/service-post";
+import { upsertPost, getUserPosts } from "@/app/service-post";
 
-export const POST = async (req: Request) => {
-  return upsertPost(req);
-};
+export const GET = getUserPosts;
+export const POST = upsertPost;

@@ -24,7 +24,7 @@ export function ShareEditor(props: MarkdownEditorProps) {
 
   const onUpdateOrCreatePost = useMemo(
     () =>
-      debounce(async (markdown: string) => {
+      debounce(async (markdown: string, title: Post["title"]) => {
         setIsSaving(true);
 
         try {
@@ -32,6 +32,7 @@ export function ShareEditor(props: MarkdownEditorProps) {
             url: "/api/post",
             method: "post",
             data: {
+              title,
               id: postId,
               markdown,
             },
@@ -93,9 +94,10 @@ export function ShareEditor(props: MarkdownEditorProps) {
         onChange={({ tr, helpers }) => {
           if (tr?.docChanged) {
             const markdown = helpers.getMarkdown();
+            const title = getMarktionTitle(markdown) || null;
 
             setDraft(markdown);
-            onUpdateOrCreatePost(markdown);
+            onUpdateOrCreatePost(markdown, title);
           }
         }}
         toolbarProps={{
@@ -104,6 +106,13 @@ export function ShareEditor(props: MarkdownEditorProps) {
       />
     </div>
   );
+}
+
+function getMarktionTitle(markdown: string) {
+  const paragraphs = markdown.split("\n");
+  const heading = paragraphs.find(item => item.startsWith("#")) || "";
+
+  return heading.replace(/#+\s/, "");
 }
 
 export default ShareEditor;

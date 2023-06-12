@@ -1,6 +1,5 @@
 import { PostModel } from "@/app/model";
 import { PostDetail } from "@/app/ui-post/post-detail";
-import { Post } from "@prisma/client";
 
 export default async function MarkdownPreviewPage({
   params,
@@ -17,7 +16,3 @@ export default async function MarkdownPreviewPage({
     </div>
   );
 }
-
-const renderTitle = (post: Post) => {
-  return <h1 className="text-4xl mb-2 font-extrabold">{post.title}</h1>;
-};
