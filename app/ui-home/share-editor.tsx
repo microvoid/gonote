@@ -6,11 +6,11 @@ import { useEffect, useMemo, useState } from "react";
 import { debounce } from "lodash";
 import { Post } from "@prisma/client";
 import { DownloadIcon, UpdateIcon } from "@radix-ui/react-icons";
-import { MarktionEditor } from "../ui-editor";
+import { MarkdownEditorProps, MarktionEditor } from "../ui-editor";
 import { downloadFile } from "../utils/file";
 import { signInWithGuest } from "../lib-auth/signIn";
 
-export function ShareEditor(props: { initialContent?: string }) {
+export function ShareEditor(props: MarkdownEditorProps) {
   const [postId, setPostId] = useState<string | null>(null);
   const [slug, setSlug] = useState<string | null>(null);
   const [draft, setDraft] = useState("");
@@ -89,6 +89,7 @@ export function ShareEditor(props: { initialContent?: string }) {
     <div className="p-5 mx-auto md:w-[768px]">
       <MarktionEditor
         placeholder="Edit markdown..."
+        {...props}
         onChange={({ tr, helpers }) => {
           if (tr?.docChanged) {
             const markdown = helpers.getMarkdown();
