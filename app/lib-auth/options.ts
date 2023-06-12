@@ -10,7 +10,6 @@ import { createGuest } from "../model-user";
 const VERCEL_DEPLOYMENT = !!process.env.VERCEL_URL;
 
 export const options: NextAuthOptions = {
-  secret: process.env.AUTH_SECRET,
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_ID!,
