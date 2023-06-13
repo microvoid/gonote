@@ -13,9 +13,15 @@ import {
   ChipProps,
 } from "@nextui-org/react";
 import Link from "next/link";
-import { TrashIcon, OpenInNewWindowIcon } from "@radix-ui/react-icons";
+import {
+  TrashIcon,
+  OpenInNewWindowIcon,
+  DownloadIcon,
+} from "@radix-ui/react-icons";
 import { Post } from "@prisma/client";
 import { fromNow } from "../utils/time";
+import { downloadFile } from "../utils";
+import { siteConstants } from "../constants";
 
 export type PostsProps = {
   defaultPosts: Post[];
@@ -57,6 +63,10 @@ export function Posts({ defaultPosts }: PostsProps) {
     await onRefreshPosts();
   };
 
+  const onExportMarkdown = (post: Post) => {
+    downloadFile(`${post.title || post.slug}.md`, post.markdown);
+  };
+
   const renderCell = (post: Post, key: keyof Post | "actions") => {
     const statusColorMap: Record<Post["publicStats"], ChipProps["color"]> = {
       public: "success",
@@ -90,6 +100,12 @@ export function Posts({ defaultPosts }: PostsProps) {
               <Link href={`/m/${post.slug}`} target="_blank">
                 <OpenInNewWindowIcon />
               </Link>
+            </span>
+            <span
+              className="text-lg text-default-400 cursor-pointer active:opacity-50"
+              onClick={() => onExportMarkdown(post)}
+            >
+              <DownloadIcon />
             </span>
             <span
               className="text-lg text-danger cursor-pointer active:opacity-50"

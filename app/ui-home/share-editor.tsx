@@ -16,6 +16,7 @@ export function ShareEditor(props: MarkdownEditorProps) {
   const [slug, setSlug] = useState<string | null>(null);
   const [draft, setDraft] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [title, setTitle] = useState<string | null>(null);
 
   const isDraftEditor = Boolean(postId);
 
@@ -44,6 +45,7 @@ export function ShareEditor(props: MarkdownEditorProps) {
           if (!postId) {
             setPostId(post.id);
             setSlug(post.slug);
+            setTitle(post.title);
           }
 
           setIsSaving(false);
@@ -55,7 +57,7 @@ export function ShareEditor(props: MarkdownEditorProps) {
   );
 
   const onExportMarkdown = () => {
-    downloadFile(`${slug || siteConstants.brand}.md`, draft);
+    downloadFile(`${title || siteConstants.brand}.md`, draft);
   };
 
   const postUrl = `${location.origin}/m/${slug}`;
