@@ -12,13 +12,13 @@ import {
   ItalicExtension,
   LinkExtension,
   ListItemExtension,
-  MarkdownExtension,
   OrderedListExtension,
   PlaceholderExtension,
   StrikeExtension,
   TableExtension,
   TrailingNodeExtension,
 } from "remirror/extensions";
+import { MarkdownExtension } from "../ui-editor-extensions/remirror-extension-marktion";
 
 export const createExtensions = (placeholder?: string) => {
   return [
@@ -39,7 +39,9 @@ export const createExtensions = (placeholder?: string) => {
     new CodeBlockExtension({ supportedLanguages: [jsx, typescript] }),
     new TrailingNodeExtension(),
     new TableExtension(),
-    new MarkdownExtension({ copyAsMarkdown: false }),
+    new MarkdownExtension({
+      copyAsMarkdown: false,
+    }),
     /**
      * `HardBreakExtension` allows us to create a newline inside paragraphs.
      * e.g. in a list item
