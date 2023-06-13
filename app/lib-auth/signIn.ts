@@ -4,7 +4,9 @@ export async function signInWithGuest() {
   const session = await getSession();
 
   if (!session) {
-    return signIn("credentials");
+    return signIn("credentials", {
+      redirect: false,
+    });
   }
 
   return null;
