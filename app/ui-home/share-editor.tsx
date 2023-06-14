@@ -8,7 +8,6 @@ import { Post } from "@prisma/client";
 import { DownloadIcon, UpdateIcon } from "@radix-ui/react-icons";
 import { MarkdownEditorProps, MarktionEditor } from "../ui-editor";
 import { downloadFile } from "../utils/file";
-import { signInWithGuest } from "../lib-auth/signIn";
 import { siteConstants } from "../constants";
 
 export function ShareEditor(props: MarkdownEditorProps) {
@@ -19,10 +18,6 @@ export function ShareEditor(props: MarkdownEditorProps) {
   const [title, setTitle] = useState<string | null>(null);
 
   const isDraftEditor = Boolean(postId);
-
-  useEffect(() => {
-    signInWithGuest();
-  }, []);
 
   const onUpdateOrCreatePost = useMemo(
     () =>
