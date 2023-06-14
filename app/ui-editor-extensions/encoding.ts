@@ -259,7 +259,6 @@ const turndownService = new TurndownService({
         return false;
       }
 
-      // eslint-disable-next-line unicorn/prefer-array-find
       const rows = [...(node as HTMLTableElement).rows].filter(r => {
         // Remove controller rows
         return !isControllerHeadingRow(r);

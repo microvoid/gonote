@@ -127,7 +127,9 @@ export class MarkdownExtension extends PlainExtension<MarkdownOptions> {
     return {
       props: {
         handleDOMEvents: {
-          paste(view, { clipboardData }) {
+          paste(view, e) {
+            const { clipboardData } = e;
+
             if (!clipboardData) {
               return false;
             }
@@ -146,14 +148,17 @@ export class MarkdownExtension extends PlainExtension<MarkdownOptions> {
               const md = self.options.htmlToMarkdown(html);
 
               self.insertMarkdown(md);
+
+              e.preventDefault();
               return true;
             }
 
             const text = clipboardData.getData("text/plain");
 
             if (text) {
-              self.insertMarkdown(text);
+              self.store.commands.insertMarkdown(text);
 
+              e.preventDefault();
               return true;
             }
 
@@ -270,10 +275,12 @@ declare global {
       /**
        * Register the markdown string handler..
        */
+      // @ts-ignore
       markdown: MarkdownExtension;
     }
 
     interface AllExtensions {
+      // @ts-ignore
       markdown: MarkdownExtension;
     }
   }
