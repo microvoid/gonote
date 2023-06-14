@@ -1,6 +1,6 @@
 "use client";
 
-import { DashboardIcon } from "@radix-ui/react-icons";
+import { AvatarIcon, HomeIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { siteConstants } from "../constants";
 // import { SignUp } from "./signup-client";
@@ -17,13 +17,21 @@ export function Nav() {
         {brand}
       </Link>
 
-      <div className="hidden items-center space-x-6 sm:flex">
+      <div className="hidden items-center space-x-4 sm:flex">
+        <Link
+          href="/home"
+          className="rounded-md text-sm font-medium text-gray-500 transition-colors ease-out hover:text-black"
+        >
+          <HomeIcon />
+        </Link>
+
         <Link
           href="/dashboard"
           className="rounded-md text-sm font-medium text-gray-500 transition-colors ease-out hover:text-black"
         >
-          <DashboardIcon />
+          <AvatarIcon />
         </Link>
+
         {/* <SignUp /> */}
       </div>
     </div>

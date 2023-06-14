@@ -1,5 +1,6 @@
 import { User } from "@prisma/client";
+import AVATAR from "@/public/avatar.svg";
 
 export const getGuestAvatar = (user: User) => {
-  return `https://avatar.marktion.cn/api/avatar/${user.id}?t=window&s=128`;
+  return AVATAR;
 };
