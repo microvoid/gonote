@@ -8,8 +8,8 @@ export const UserAvatar = ({ user }: { user: User }) => {
       className="w-[32px] h-[32px] rounded-full mr-2"
       src={getGuestAvatar(user)}
       alt={user.name!}
-      width={128}
-      height={128}
+      width={32}
+      height={32}
     />
   );
 };
