@@ -6,6 +6,7 @@ import {
   FontItalicIcon,
   QuoteIcon,
   CodeIcon,
+  ImageIcon,
 } from "@radix-ui/react-icons";
 import { useActive, useCommands } from "@remirror/react";
 import {
@@ -15,13 +16,16 @@ import {
   ItalicExtension,
   StrikeExtension,
 } from "remirror/extensions";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { Toast } from "../ui-toast";
 
 export type EditorToolbarProps = {
   suffix?: React.ReactNode;
 };
 
 export function EditorToolbar(props: EditorToolbarProps) {
+  const [isCommingSoonToastOpen, setCommingSoonToastOpen] = useState(false);
+
   const { toggleBlockquote } = useCommands<BlockquoteExtension>();
   const { toggleCodeBlock } = useCommands<CodeBlockExtension>();
 
@@ -59,8 +63,6 @@ export function EditorToolbar(props: EditorToolbarProps) {
       className="flex p-[10px] mb-2 w-full min-w-max rounded-md shadow-md border"
       aria-label="Formatting options"
     >
-      <InlineToolBtn />
-      <Toolbar.Separator className="w-[1px] bg-mauve6 mx-[10px]" />
       <Toolbar.ToggleGroup
         type="multiple"
         value={blockTypeValues}
@@ -83,9 +85,31 @@ export function EditorToolbar(props: EditorToolbarProps) {
         >
           <CodeIcon />
         </Toolbar.ToggleItem>
+
+        <Toolbar.ToggleItem
+          className="flex-shrink-0 flex-grow-0 basis-auto text-mauve11 h-[25px] px-[5px] rounded inline-flex text-[13px] leading-none items-center justify-center  ml-0.5 outline-none hover:bg-violet3 hover:text-violet11 focus:relative focus:shadow-[0_0_0_2px] focus:shadow-violet7 first:ml-0 data-[state=on]:bg-secondary data-[state=on]:text-secondary-content"
+          value="codeblock"
+          aria-label="code block"
+          onClick={() => {
+            setCommingSoonToastOpen(false);
+            setTimeout(() => {
+              setCommingSoonToastOpen(true);
+            }, 100);
+          }}
+        >
+          <ImageIcon />
+        </Toolbar.ToggleItem>
       </Toolbar.ToggleGroup>
+
       <Toolbar.Separator className="w-[1px] bg-mauve6 mx-[10px]" />
       {props.suffix}
+
+      <Toast
+        open={isCommingSoonToastOpen}
+        onOpenChange={setCommingSoonToastOpen}
+      >
+        Comming Soon
+      </Toast>
     </Toolbar.Root>
   );
 }
