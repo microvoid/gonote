@@ -9,7 +9,11 @@ import type {
 import React, { useCallback, useImperativeHandle, useRef } from "react";
 import { EditorComponent, Remirror, useRemirror } from "@remirror/react";
 
-import { EditorToolbar, EditorToolbarProps } from "../ui-editor-toolbar";
+import {
+  BubbleToolbar,
+  EditorToolbar,
+  EditorToolbarProps,
+} from "../ui-editor-toolbar";
 import { createExtensions } from "./extensions";
 
 export type MarkdownEditorProps = {
@@ -61,6 +65,7 @@ export const RemirrorEditor = React.forwardRef<
       {...rest}
     >
       <EditorToolbar {...toolbarProps} />
+      <BubbleToolbar />
 
       <EditorComponent />
       {children}

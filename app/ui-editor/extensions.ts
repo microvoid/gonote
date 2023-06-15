@@ -9,13 +9,16 @@ import {
   CodeExtension,
   HardBreakExtension,
   HeadingExtension,
+  ImageExtension,
   ItalicExtension,
   LinkExtension,
   ListItemExtension,
   OrderedListExtension,
   PlaceholderExtension,
+  PositionerExtension,
   StrikeExtension,
   TableExtension,
+  TaskListExtension,
   TrailingNodeExtension,
 } from "remirror/extensions";
 import { MarkdownExtension } from "../ui-editor-extensions/remirror-extension-marktion";
@@ -29,8 +32,10 @@ export const createExtensions = (placeholder?: string) => {
     new ItalicExtension(),
     new HeadingExtension(),
     new BlockquoteExtension(),
+    new ImageExtension(),
     new BulletListExtension({ enableSpine: true }),
     new OrderedListExtension(),
+    new TaskListExtension(),
     new ListItemExtension({
       priority: ExtensionPriority.High,
       enableCollapsible: true,
