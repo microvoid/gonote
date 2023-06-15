@@ -9,10 +9,19 @@
   max-width: none; 
 }
 
+.remirror-editor-wrapper .prose blockquote p:first-of-type::before {
+  content: none;
+}
+.remirror-editor-wrapper .prose blockquote p:last-of-type::after {
+  content: none;
+}
+
 .remirror-editor-wrapper .remirror-is-empty:first-of-type::before {
   position: absolute;
   color: #aaa;
   pointer-events: none;
   height: 0;
   content: attr(data-placeholder);
+
+
 }
