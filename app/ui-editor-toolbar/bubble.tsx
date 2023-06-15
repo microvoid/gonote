@@ -50,13 +50,11 @@ export function BubbleToolbar(props: BubbleToolbarProps) {
 
   return (
     <div role="bubble-toolbar">
-      <div ref={ref} data-bubble-positioner></div>
+      <div ref={ref} role="bubble-positioner"></div>
+
       <Popover.Root open={bubbleOpen} onOpenChange={setBubbleOpen}>
         <Popover.Anchor asChild>
-          <div
-            style={inlineStyle}
-            data-bubble-positioner-dropdown-trigger
-          ></div>
+          <div style={inlineStyle} role="bubble-positioner-trigger"></div>
         </Popover.Anchor>
 
         <Popover.Portal>
@@ -64,7 +62,7 @@ export function BubbleToolbar(props: BubbleToolbarProps) {
             side="top"
             sideOffset={15}
             onOpenAutoFocus={e => e.preventDefault()}
-            className="p-3 w-[260px] bg-white rounded-md shadow-md border will-change-[transform,opacity] data-[state=open]:data-[side=top]:animate-slideDownAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade"
+            className="px-2 py-1 bg-white rounded-md shadow-md border will-change-[transform,opacity] data-[state=open]:data-[side=top]:animate-slideDownAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade"
           >
             <Toolbar.Root>
               <InlineToolBtn />

@@ -13,6 +13,7 @@ import {
   BubbleToolbar,
   EditorToolbar,
   EditorToolbarProps,
+  SlashToolbar,
 } from "../ui-editor-toolbar";
 import { createExtensions } from "./extensions";
 
@@ -66,6 +67,7 @@ export const RemirrorEditor = React.forwardRef<
     >
       <EditorToolbar {...toolbarProps} />
       <BubbleToolbar />
+      <SlashToolbar />
 
       <EditorComponent />
       {children}
