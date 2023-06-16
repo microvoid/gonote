@@ -11,8 +11,10 @@ import {
   OrderedListExtension,
   TaskListExtension,
   TableExtension,
+  CodeExtension,
 } from "remirror/extensions";
 import {
+  Code,
   Heading1,
   Heading2,
   Heading3,
@@ -26,8 +28,11 @@ import {
   BorderRightIcon,
   BorderTopIcon,
   CodeIcon,
+  FontBoldIcon,
+  FontItalicIcon,
   ListBulletIcon,
   QuoteIcon,
+  StrikethroughIcon,
   TableIcon,
 } from "@radix-ui/react-icons";
 
@@ -49,14 +54,6 @@ export function useToolbarActions() {
   const bulletListActive = useActive<BulletListExtension>();
   const taskListActive = useActive<TaskListExtension>();
   const tableActive = useActive<TableExtension>();
-
-  const { toggleBold } = useCommands<BoldExtension>();
-  const { toggleItalic } = useCommands<ItalicExtension>();
-  const { toggleStrike } = useCommands<StrikeExtension>();
-
-  const boldActive = useActive<BoldExtension>().bold();
-  const italicActive = useActive<ItalicExtension>().italic();
-  const strikeActive = useActive<StrikeExtension>().strike();
 
   const { tools: TableTools } = useTableTools();
 
@@ -166,44 +163,9 @@ export function useToolbarActions() {
     },
   ];
 
-  const textFormatValues = useMemo(() => {
-    const values: ("bold" | "italic" | "strikethrough")[] = [];
-
-    if (boldActive) {
-      values.push("bold");
-    }
-
-    if (italicActive) {
-      values.push("italic");
-    }
-
-    if (strikeActive) {
-      values.push("strikethrough");
-    }
-    return values;
-  }, [boldActive, italicActive, strikeActive]);
-
   const blockFormatValues = Tools.filter(item => item.active).map(
     item => item.key
   );
-
-  const onToggleBold = useCallback(() => {
-    if (toggleBold.enabled()) {
-      toggleBold();
-    }
-  }, [toggleBold]);
-
-  const onToggleItalic = useCallback(() => {
-    if (toggleItalic.enabled()) {
-      toggleItalic();
-    }
-  }, [toggleItalic]);
-
-  const onToggleStrike = useCallback(() => {
-    if (toggleStrike.enabled()) {
-      toggleStrike();
-    }
-  }, [toggleStrike]);
 
   const { onToggleBlockquote, onToggleCodeblock, onToggleHeading } =
     useMemo(() => {
@@ -229,12 +191,7 @@ export function useToolbarActions() {
   return {
     Tools: tableActive.table() ? TableTools : Tools,
 
-    textFormatValues,
     blockFormatValues,
-
-    onToggleBold,
-    onToggleItalic,
-    onToggleStrike,
 
     toggleBlockquote,
     toggleCodeBlock,
@@ -299,6 +256,68 @@ export function useTableTools() {
   ];
 
   return {
+    tools,
+  };
+}
+
+export function useInlineTools() {
+  const { toggleBold } = useCommands<BoldExtension>();
+  const { toggleItalic } = useCommands<ItalicExtension>();
+  const { toggleStrike } = useCommands<StrikeExtension>();
+  const { toggleCode } = useCommands<CodeExtension>();
+
+  const boldActive = useActive<BoldExtension>();
+  const italicActive = useActive<ItalicExtension>();
+  const strikeActive = useActive<StrikeExtension>();
+  const codeActive = useActive<CodeExtension>();
+
+  const tools = [
+    {
+      key: "bold",
+      active: boldActive.bold(),
+      toggle: () => {
+        if (toggleBold.enabled()) {
+          toggleBold();
+        }
+      },
+      icon: <FontBoldIcon />,
+    },
+    {
+      key: "italic",
+      active: italicActive.italic(),
+      toggle: () => {
+        if (toggleItalic.enabled()) {
+          toggleItalic();
+        }
+      },
+      icon: <FontItalicIcon />,
+    },
+    {
+      key: "strike",
+      active: strikeActive.strike(),
+      toggle: () => {
+        if (toggleStrike.enabled()) {
+          toggleStrike();
+        }
+      },
+      icon: <StrikethroughIcon />,
+    },
+    {
+      key: "code",
+      active: codeActive.code(),
+      toggle: () => {
+        if (toggleCode.enabled()) {
+          toggleCode();
+        }
+      },
+      icon: <Code className="w-[14px] h-[14px]" />,
+    },
+  ];
+
+  const formats = tools.filter(item => item.active).map(item => item.key);
+
+  return {
+    formats,
     tools,
   };
 }
