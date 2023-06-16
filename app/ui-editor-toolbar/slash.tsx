@@ -1,15 +1,15 @@
 import Menu, { MenuItem } from "rc-menu";
 import * as Popover from "@radix-ui/react-popover";
-import { usePositioner } from "@remirror/react-hooks";
+import { useKeymap, usePositioner } from "@remirror/react-hooks";
 import {
   useCommands,
-  useCurrentSelection,
   useEditorEvent,
+  useRemirrorContext,
 } from "@remirror/react";
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useToolbarActions } from "./useToolbarActions";
 import { getPositioner } from "@remirror/extension-positioner";
-import { FromToProps } from "remirror";
+import { AnyExtension, FromToProps, RemirrorEventListener } from "remirror";
 
 export function SlashToolbar() {
   const positioner = usePositioner(() => {
@@ -46,15 +46,46 @@ export function SlashToolbar() {
 
   const onChoseTool = (index: number) => {
     const tool = Tools[index];
+    setSlashToolbarOpen(false);
+    setSlashStartSelection(null);
 
     if (tool) {
       slashStartSelection && commands.delete(slashStartSelection);
 
       tool.toggle();
-      setSlashToolbarOpen(false);
       commands.focus();
     }
   };
+
+  const handler: RemirrorEventListener<AnyExtension> = useCallback(
+    ({ state }) => {
+      if (slashStartSelection) {
+        const seleciton = state.selection;
+        const isUnExpectedSelectionInSlashMode =
+          seleciton.from !== seleciton.to ||
+          seleciton.from <= slashStartSelection.from;
+
+        console.log(seleciton.from, slashStartSelection.from);
+
+        if (isUnExpectedSelectionInSlashMode) {
+          setSlashToolbarOpen(false);
+          setSlashStartSelection(null);
+        }
+      }
+    },
+    [slashStartSelection]
+  );
+
+  useRemirrorContext(handler);
+
+  // override default enter keybinding.
+  useKeymap("Enter", () => {
+    if (slashToolbarOpen) {
+      onChoseTool(activeIndex);
+      return true;
+    }
+    return false;
+  });
 
   useEditorEvent("textInput", e => {
     const isSlashKeyDown = e.text.trim() === "/";
@@ -73,12 +104,6 @@ export function SlashToolbar() {
 
   useEditorEvent("keydown", e => {
     if (slashToolbarOpen) {
-      if (e.key === "Enter") {
-        e.preventDefault();
-
-        onChoseTool(activeIndex);
-      }
-
       if (e.key === "Escape") {
         setSlashToolbarOpen(false);
       }
@@ -91,6 +116,12 @@ export function SlashToolbar() {
         activeUp();
         e.preventDefault();
       }
+    }
+  });
+
+  useEditorEvent("keyup", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
     }
   });
 
