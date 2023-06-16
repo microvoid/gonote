@@ -22,6 +22,20 @@
   pointer-events: none;
   height: 0;
   content: attr(data-placeholder);
+}
 
+.rc-menu {
+  @apply bg-white text-sm py-1;
+}
 
+.rc-menu-item {
+  @apply relative overflow-hidden ;
+}
+
+.rc-menu-item, .rc-menu-submenu-title {
+  @apply px-3 py-1 text-violet11;
+}
+
+.rc-menu-item-active {
+  @apply bg-primary text-primary-foreground;
 }
