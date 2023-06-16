@@ -1,5 +1,4 @@
 import * as Toolbar from "@radix-ui/react-toolbar";
-
 import {
   StrikethroughIcon,
   FontBoldIcon,
@@ -8,9 +7,7 @@ import {
   CodeIcon,
   ImageIcon,
 } from "@radix-ui/react-icons";
-import { useActive, useCommands } from "@remirror/react";
-import { BlockquoteExtension, CodeBlockExtension } from "remirror/extensions";
-import { useCallback, useMemo, useState } from "react";
+import { useState } from "react";
 import { Toast } from "../ui-toast";
 import { useToolbarActions } from "./useToolbarActions";
 

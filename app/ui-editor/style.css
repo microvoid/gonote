@@ -25,15 +25,15 @@
 }
 
 .rc-menu {
-  @apply bg-white text-sm py-1;
+  @apply bg-white text-[12px] py-1;
 }
 
 .rc-menu-item {
-  @apply relative overflow-hidden ;
+  @apply relative overflow-hidden;
 }
 
 .rc-menu-item, .rc-menu-submenu-title {
-  @apply px-3 py-1 text-violet11;
+  @apply flex items-center px-3 py-1 text-violet11;
 }
 
 .rc-menu-item-active {

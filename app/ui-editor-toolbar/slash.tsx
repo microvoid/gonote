@@ -46,8 +46,8 @@ export function SlashToolbar() {
 
   const onChoseTool = (index: number) => {
     const tool = Tools[index];
-    setSlashToolbarOpen(false);
-    setSlashStartSelection(null);
+
+    onCloseSlash();
 
     if (tool) {
       slashStartSelection && commands.delete(slashStartSelection);
@@ -55,6 +55,12 @@ export function SlashToolbar() {
       tool.toggle();
       commands.focus();
     }
+  };
+
+  const onCloseSlash = () => {
+    setSlashToolbarOpen(false);
+    setSlashStartSelection(null);
+    setActiveIndex(0);
   };
 
   const handler: RemirrorEventListener<AnyExtension> = useCallback(
@@ -65,11 +71,8 @@ export function SlashToolbar() {
           seleciton.from !== seleciton.to ||
           seleciton.from <= slashStartSelection.from;
 
-        console.log(seleciton.from, slashStartSelection.from);
-
         if (isUnExpectedSelectionInSlashMode) {
-          setSlashToolbarOpen(false);
-          setSlashStartSelection(null);
+          onCloseSlash();
         }
       }
     },
@@ -105,8 +108,9 @@ export function SlashToolbar() {
   useEditorEvent("keydown", e => {
     if (slashToolbarOpen) {
       if (e.key === "Escape") {
-        setSlashToolbarOpen(false);
+        onCloseSlash();
       }
+
       if (e.key === "ArrowDown") {
         activeDown();
         e.preventDefault();
@@ -116,12 +120,6 @@ export function SlashToolbar() {
         activeUp();
         e.preventDefault();
       }
-    }
-  });
-
-  useEditorEvent("keyup", e => {
-    if (e.key === "Enter") {
-      e.preventDefault();
     }
   });
 
@@ -155,7 +153,7 @@ export function SlashToolbar() {
           <Popover.Content
             side="bottom"
             align="start"
-            sideOffset={10}
+            sideOffset={4}
             onOpenAutoFocus={e => e.preventDefault()}
             className="bg-white rounded-md shadow-md border will-change-[transform,opacity] data-[state=open]:data-[side=top]:animate-slideDownAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade"
           >
@@ -167,7 +165,7 @@ export function SlashToolbar() {
                     onClick={() => onChoseTool(index)}
                     onMouseEnter={() => setActiveIndex(index)}
                   >
-                    {tool.key}
+                    <span className="mr-1">{tool.icon}</span> {tool.key}
                   </MenuItem>
                 );
               })}

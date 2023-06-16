@@ -8,6 +8,13 @@ import {
   HeadingExtension,
   HeadingExtensionAttributes,
 } from "remirror/extensions";
+import {
+  CodeIcon,
+  Heading1,
+  Heading2,
+  Heading3,
+  QuoteIcon,
+} from "lucide-react";
 import { useCallback, useMemo } from "react";
 
 export function useToolbarActions() {
@@ -38,6 +45,7 @@ export function useToolbarActions() {
           });
         }
       },
+      icon: <Heading1 className="h-[14px]" />,
     },
     {
       key: "heading2",
@@ -49,6 +57,7 @@ export function useToolbarActions() {
           });
         }
       },
+      icon: <Heading2 className="h-[14px]" />,
     },
     {
       key: "heading3",
@@ -60,6 +69,7 @@ export function useToolbarActions() {
           });
         }
       },
+      icon: <Heading3 className="h-[14px]" />,
     },
     {
       key: "blockquote",
@@ -69,15 +79,18 @@ export function useToolbarActions() {
           toggleBlockquote();
         }
       },
+      icon: <QuoteIcon className="h-[14px]" />,
     },
     {
       key: "codeblock",
+
       active: codeblockActive.codeBlock(),
       toggle: () => {
         if (toggleCodeBlock.enabled()) {
           toggleCodeBlock();
         }
       },
+      icon: <CodeIcon className="h-[14px]" />,
     },
   ];
 
