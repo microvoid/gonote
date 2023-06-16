@@ -29,3 +29,5 @@ export const Toast = React.forwardRef<ToastRef, ToastProps>(
     );
   }
 );
+
+Toast.displayName = "ui-toast";

@@ -83,6 +83,7 @@ export function InlineToolBtn() {
           <Toolbar.ToggleItem
             className="flex-shrink-0 flex-grow-0 basis-auto text-mauve11 h-[25px] px-[5px] rounded inline-flex text-[13px] leading-none items-center justify-center  ml-0.5 outline-none hover:bg-violet3 hover:text-violet11 focus:relative focus:shadow-[0_0_0_2px] focus:shadow-violet7 first:ml-0 data-[state=on]:bg-secondary data-[state=on]:text-secondary-content"
             value={tool.key}
+            key={tool.key}
             aria-label={tool.key}
             onClick={tool.toggle}
           >
