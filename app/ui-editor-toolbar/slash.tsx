@@ -165,7 +165,7 @@ export function SlashToolbar() {
                     onClick={() => onChoseTool(index)}
                     onMouseEnter={() => setActiveIndex(index)}
                   >
-                    <span className="mr-1">{tool.icon}</span> {tool.key}
+                    <span className="mr-2">{tool.icon}</span> {tool.key}
                   </MenuItem>
                 );
               })}

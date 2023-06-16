@@ -24,8 +24,52 @@
   content: attr(data-placeholder);
 }
 
+.remirror-task-list li > div {
+  display: inline-block;
+  margin: 0;
+}
+
+.remirror-task-list p {
+  margin: 0;
+}
+
+.prose {
+  & :where(code):not(:where([class~="not-prose"] *)) {
+    padding: 2px 8px;
+    border-radius: var(--rounded-badge);
+  }
+  & code:after,
+  & code:before {
+    content: none;
+  }
+
+  pre {
+    code {
+      border-radius: 0;
+      padding: 0;
+    }
+  }
+
+  & :where(blockquote p):not(:where([class~="not-prose"] *))::before,
+  & :where(blockquote p):not(:where([class~="not-prose"] *))::after {
+    content: none;
+  }
+
+  & :where(tbody th):not(:where([class~="not-prose"] *)) {
+    border-bottom: 1px solid red;
+  }
+}
+
+.remirror-task-list .remirror-list-item-marker-container {
+  margin-right: 10px;
+}
+
+.remirror-task-list [data-task-list-item][data-checked] p {
+  text-decoration: line-through;
+}
+
 .rc-menu {
-  @apply bg-white text-[12px] py-1;
+  @apply text-[12px] py-1 rounded-md bg-white;
 }
 
 .rc-menu-item {

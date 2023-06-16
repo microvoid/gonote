@@ -1,4 +1,4 @@
-import { useActive, useCommands } from "@remirror/react";
+import { useActive, useCommands, useRemirrorContext } from "@remirror/react";
 import {
   BlockquoteExtension,
   BoldExtension,
@@ -7,24 +7,48 @@ import {
   StrikeExtension,
   HeadingExtension,
   HeadingExtensionAttributes,
+  BulletListExtension,
+  OrderedListExtension,
+  TaskListExtension,
+  TableExtension,
 } from "remirror/extensions";
 import {
-  CodeIcon,
   Heading1,
   Heading2,
   Heading3,
-  QuoteIcon,
+  ListChecksIcon,
+  ListOrderedIcon,
 } from "lucide-react";
 import { useCallback, useMemo } from "react";
+import {
+  BorderBottomIcon,
+  BorderLeftIcon,
+  BorderRightIcon,
+  BorderTopIcon,
+  CodeIcon,
+  ListBulletIcon,
+  QuoteIcon,
+  TableIcon,
+} from "@radix-ui/react-icons";
 
 export function useToolbarActions() {
+  const ctx = useRemirrorContext();
+
   const { toggleBlockquote } = useCommands<BlockquoteExtension>();
   const { toggleCodeBlock } = useCommands<CodeBlockExtension>();
   const { toggleHeading } = useCommands<HeadingExtension>();
+  const { toggleOrderedList } = useCommands<OrderedListExtension>();
+  const { toggleBulletList } = useCommands<BulletListExtension>();
+  const { toggleTaskList } = useCommands<TaskListExtension>();
+  const { createTable } = useCommands<TableExtension>();
 
   const blockquoteActive = useActive<BlockquoteExtension>();
   const codeblockActive = useActive<CodeBlockExtension>();
   const headingActive = useActive<HeadingExtension>();
+  const orderedListActive = useActive<OrderedListExtension>();
+  const bulletListActive = useActive<BulletListExtension>();
+  const taskListActive = useActive<TaskListExtension>();
+  const tableActive = useActive<TableExtension>();
 
   const { toggleBold } = useCommands<BoldExtension>();
   const { toggleItalic } = useCommands<ItalicExtension>();
@@ -33,6 +57,8 @@ export function useToolbarActions() {
   const boldActive = useActive<BoldExtension>().bold();
   const italicActive = useActive<ItalicExtension>().italic();
   const strikeActive = useActive<StrikeExtension>().strike();
+
+  const { tools: TableTools } = useTableTools();
 
   const Tools = [
     {
@@ -45,7 +71,7 @@ export function useToolbarActions() {
           });
         }
       },
-      icon: <Heading1 className="h-[14px]" />,
+      icon: <Heading1 className="w-[14px] h-[14px]" />,
     },
     {
       key: "heading2",
@@ -57,7 +83,7 @@ export function useToolbarActions() {
           });
         }
       },
-      icon: <Heading2 className="h-[14px]" />,
+      icon: <Heading2 className="w-[14px] h-[14px]" />,
     },
     {
       key: "heading3",
@@ -69,7 +95,37 @@ export function useToolbarActions() {
           });
         }
       },
-      icon: <Heading3 className="h-[14px]" />,
+      icon: <Heading3 className="w-[14px] h-[14px]" />,
+    },
+    {
+      key: "ordered-list",
+      active: orderedListActive.orderedList(),
+      toggle: () => {
+        if (toggleOrderedList.enabled()) {
+          toggleOrderedList();
+        }
+      },
+      icon: <ListOrderedIcon className="w-[14px] h-[14px]" />,
+    },
+    {
+      key: "bullet-list",
+      active: bulletListActive.bulletList(),
+      toggle: () => {
+        if (toggleBulletList.enabled()) {
+          toggleBulletList();
+        }
+      },
+      icon: <ListBulletIcon className="w-[14px] h-[14px]" />,
+    },
+    {
+      key: "task-list",
+      active: taskListActive.taskList(),
+      toggle: () => {
+        if (toggleTaskList.enabled()) {
+          toggleTaskList();
+        }
+      },
+      icon: <ListChecksIcon className="w-[14px] h-[14px]" />,
     },
     {
       key: "blockquote",
@@ -79,18 +135,34 @@ export function useToolbarActions() {
           toggleBlockquote();
         }
       },
-      icon: <QuoteIcon className="h-[14px]" />,
+      icon: <QuoteIcon className="w-[14px] h-[14px]" />,
     },
     {
       key: "codeblock",
-
       active: codeblockActive.codeBlock(),
       toggle: () => {
         if (toggleCodeBlock.enabled()) {
           toggleCodeBlock();
         }
       },
-      icon: <CodeIcon className="h-[14px]" />,
+      icon: <CodeIcon className="w-[14px] h-[14px]" />,
+    },
+    {
+      key: "table",
+      active: tableActive.table(),
+      toggle: () => {
+        if (createTable.enabled()) {
+          const cellContent = ctx.schema.nodes.paragraph.create({ level: 3 }, [
+            ctx.schema.text("cell"),
+          ]);
+
+          createTable({
+            withHeaderRow: true,
+            cellContent,
+          });
+        }
+      },
+      icon: <TableIcon className="w-[14px] h-[14px]" />,
     },
   ];
 
@@ -155,7 +227,7 @@ export function useToolbarActions() {
     }, [toggleBlockquote, toggleCodeBlock, toggleHeading]);
 
   return {
-    Tools,
+    Tools: tableActive.table() ? TableTools : Tools,
 
     textFormatValues,
     blockFormatValues,
@@ -171,5 +243,62 @@ export function useToolbarActions() {
     onToggleBlockquote,
     onToggleCodeblock,
     onToggleHeading,
+  };
+}
+
+export function useTableTools() {
+  const {
+    addTableColumnAfter,
+    addTableColumnBefore,
+    addTableRowBefore,
+    addTableRowAfter,
+  } = useCommands<TableExtension>();
+  const tableActive = useActive<TableExtension>();
+
+  const tools = [
+    {
+      key: "table-row-add-before",
+      active: tableActive.tableCell(),
+      toggle: () => {
+        if (addTableRowBefore.enabled()) {
+          addTableRowBefore();
+        }
+      },
+      icon: <BorderTopIcon className="w-[14px] h-[14px]" />,
+    },
+    {
+      key: "table-row-add-after",
+      active: tableActive.tableCell(),
+      toggle: () => {
+        if (addTableRowAfter.enabled()) {
+          addTableRowAfter();
+        }
+      },
+      icon: <BorderBottomIcon className="w-[14px] h-[14px]" />,
+    },
+    {
+      key: "table-col-add-before",
+      active: tableActive.tableCell(),
+      toggle: () => {
+        if (addTableColumnBefore.enabled()) {
+          addTableColumnBefore();
+        }
+      },
+      icon: <BorderLeftIcon className="w-[14px] h-[14px]" />,
+    },
+    {
+      key: "table-col-add-after",
+      active: tableActive.tableCell(),
+      toggle: () => {
+        if (addTableColumnAfter.enabled()) {
+          addTableColumnAfter();
+        }
+      },
+      icon: <BorderRightIcon className="w-[14px] h-[14px]" />,
+    },
+  ];
+
+  return {
+    tools,
   };
 }

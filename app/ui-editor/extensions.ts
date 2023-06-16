@@ -15,7 +15,6 @@ import {
   ListItemExtension,
   OrderedListExtension,
   PlaceholderExtension,
-  PositionerExtension,
   StrikeExtension,
   TableExtension,
   TaskListExtension,
@@ -35,8 +34,15 @@ export const createExtensions = (placeholder?: string) => {
     new ImageExtension(),
     new BulletListExtension({ enableSpine: true }),
     new OrderedListExtension(),
-    new TaskListExtension(),
+    new TaskListExtension({
+      extraAttributes: {
+        class: "remirror-task-list",
+      },
+    }),
     new ListItemExtension({
+      extraAttributes: {
+        ["data-role"]: "list",
+      },
       priority: ExtensionPriority.High,
       enableCollapsible: true,
     }),
