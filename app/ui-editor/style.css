@@ -15,6 +15,9 @@
 .remirror-editor-wrapper .prose blockquote p:last-of-type::after {
   content: none;
 }
+.remirror-editor-wrapper .prose tbody th p {
+  font-weight: 600;
+}
 
 .remirror-editor-wrapper .remirror-is-empty:first-of-type::before {
   position: absolute;
