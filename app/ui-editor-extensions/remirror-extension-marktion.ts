@@ -143,8 +143,9 @@ export class MarkdownExtension extends PlainExtension<MarkdownOptions> {
             }
 
             const text = clipboardData.getData("text/plain");
+            const html = clipboardData.getData("text/html");
 
-            if (text) {
+            if (!html && text) {
               self.store.commands.insertMarkdown(text);
 
               e.preventDefault();

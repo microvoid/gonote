@@ -9,15 +9,10 @@ import {
   ImageIcon,
 } from "@radix-ui/react-icons";
 import { useActive, useCommands } from "@remirror/react";
-import {
-  BlockquoteExtension,
-  BoldExtension,
-  CodeBlockExtension,
-  ItalicExtension,
-  StrikeExtension,
-} from "remirror/extensions";
+import { BlockquoteExtension, CodeBlockExtension } from "remirror/extensions";
 import { useCallback, useMemo, useState } from "react";
 import { Toast } from "../ui-toast";
+import { useToolbarActions } from "./useToolbarActions";
 
 export type EditorToolbarProps = {
   suffix?: React.ReactNode;
@@ -25,38 +20,8 @@ export type EditorToolbarProps = {
 
 export function EditorToolbar(props: EditorToolbarProps) {
   const [isCommingSoonToastOpen, setCommingSoonToastOpen] = useState(false);
-
-  const { toggleBlockquote } = useCommands<BlockquoteExtension>();
-  const { toggleCodeBlock } = useCommands<CodeBlockExtension>();
-
-  const blockquoteActive = useActive<BlockquoteExtension>().blockquote();
-  const codeblockActive = useActive<CodeBlockExtension>().codeBlock();
-
-  const blockTypeValues = useMemo(() => {
-    const values: ("blockquote" | "codeblock")[] = [];
-
-    if (blockquoteActive) {
-      values.push("blockquote");
-    }
-
-    if (codeblockActive) {
-      values.push("codeblock");
-    }
-
-    return values;
-  }, [blockquoteActive, codeblockActive]);
-
-  const onToggleBlockquote = useCallback(() => {
-    if (toggleBlockquote.enabled()) {
-      toggleBlockquote();
-    }
-  }, [toggleBlockquote]);
-
-  const onToggleCodeblock = useCallback(() => {
-    if (toggleCodeBlock.enabled()) {
-      toggleCodeBlock();
-    }
-  }, [toggleCodeBlock]);
+  const { blockFormatValues, onToggleBlockquote, onToggleCodeblock } =
+    useToolbarActions();
 
   return (
     <Toolbar.Root
@@ -65,7 +30,7 @@ export function EditorToolbar(props: EditorToolbarProps) {
     >
       <Toolbar.ToggleGroup
         type="multiple"
-        value={blockTypeValues}
+        value={blockFormatValues}
         aria-label="block type"
       >
         <Toolbar.ToggleItem
@@ -115,48 +80,8 @@ export function EditorToolbar(props: EditorToolbarProps) {
 }
 
 export function InlineToolBtn() {
-  const { toggleBold } = useCommands<BoldExtension>();
-  const { toggleItalic } = useCommands<ItalicExtension>();
-  const { toggleStrike } = useCommands<StrikeExtension>();
-
-  const boldActive = useActive<BoldExtension>().bold();
-  const italicActive = useActive<ItalicExtension>().italic();
-  const strikeActive = useActive<StrikeExtension>().strike();
-
-  const textFormatValues = useMemo(() => {
-    const values: ("bold" | "italic" | "strikethrough")[] = [];
-
-    if (boldActive) {
-      values.push("bold");
-    }
-
-    if (italicActive) {
-      values.push("italic");
-    }
-
-    if (strikeActive) {
-      values.push("strikethrough");
-    }
-    return values;
-  }, [boldActive, italicActive, strikeActive]);
-
-  const onToggleBold = useCallback(() => {
-    if (toggleBold.enabled()) {
-      toggleBold();
-    }
-  }, [toggleBold]);
-
-  const onToggleItalic = useCallback(() => {
-    if (toggleItalic.enabled()) {
-      toggleItalic();
-    }
-  }, [toggleItalic]);
-
-  const onToggleStrike = useCallback(() => {
-    if (toggleStrike.enabled()) {
-      toggleStrike();
-    }
-  }, [toggleStrike]);
+  const { textFormatValues, onToggleBold, onToggleItalic, onToggleStrike } =
+    useToolbarActions();
 
   return (
     <Toolbar.ToggleGroup
