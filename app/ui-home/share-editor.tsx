@@ -93,7 +93,7 @@ export function ShareEditor(props: MarkdownEditorProps) {
   return (
     <div className="p-5 mx-auto md:w-[768px]">
       <MarktionEditor
-        placeholder="Edit markdown..."
+        placeholder="Enter with your markdown text..."
         {...props}
         onChange={({ tr, helpers }) => {
           if (tr?.docChanged) {
