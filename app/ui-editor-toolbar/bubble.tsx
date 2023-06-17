@@ -3,7 +3,7 @@ import * as Toolbar from "@radix-ui/react-toolbar";
 import * as Popover from "@radix-ui/react-popover";
 import { getPositioner } from "@remirror/extension-positioner";
 import { usePositioner } from "@remirror/react-hooks";
-import { useEditorEvent } from "@remirror/react";
+import { useEditorEvent, useEditorView } from "@remirror/react";
 import { InlineToolBtn } from "./toolbar";
 
 export type BubbleToolbarProps = {};

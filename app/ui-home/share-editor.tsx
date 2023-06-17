@@ -2,7 +2,7 @@
 
 import fetch from "axios";
 import * as Toolbar from "@radix-ui/react-toolbar";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { debounce } from "lodash";
 import { Post } from "@prisma/client";
 import { DownloadIcon, UpdateIcon } from "@radix-ui/react-icons";
@@ -10,14 +10,16 @@ import { MarkdownEditorProps, MarktionEditor } from "../ui-editor";
 import { downloadFile } from "../utils/file";
 import { siteConstants } from "../constants";
 
-export function ShareEditor(props: MarkdownEditorProps) {
-  const [postId, setPostId] = useState<string | null>(null);
-  const [slug, setSlug] = useState<string | null>(null);
+type ShareEditorProps = MarkdownEditorProps & {
+  defaultPost?: Post;
+};
+
+export function ShareEditor({ defaultPost, ...editorProps }: ShareEditorProps) {
+  const [post, setPost] = useState(defaultPost);
   const [draft, setDraft] = useState("");
   const [isSaving, setIsSaving] = useState(false);
-  const [title, setTitle] = useState<string | null>(null);
 
-  const isPostEditing = Boolean(postId);
+  const postId = post?.id;
 
   const onUpdateOrCreatePost = useMemo(
     () =>
@@ -38,9 +40,7 @@ export function ShareEditor(props: MarkdownEditorProps) {
           const post: Post = res.data.data;
 
           if (!postId) {
-            setPostId(post.id);
-            setSlug(post.slug);
-            setTitle(post.title);
+            setPost(post);
           }
 
           setIsSaving(false);
@@ -52,19 +52,19 @@ export function ShareEditor(props: MarkdownEditorProps) {
   );
 
   const onExportMarkdown = () => {
-    downloadFile(`${title || siteConstants.brand}.md`, draft);
+    downloadFile(`${post?.title || siteConstants.brand}.md`, draft);
   };
 
-  const postUrl = `${location.origin}/m/${slug}`;
+  const postUrl = post ? `${location.origin}/m/${post.slug}` : null;
 
   const toolbarSuffixNode = (
     <>
       <div className="flex items-center">
-        {(isSaving || isPostEditing) && (
+        {(isSaving || postUrl) && (
           <Toolbar.Separator className="w-[1px] h-full bg-mauve6 mx-[10px]" />
         )}
 
-        {isPostEditing && (
+        {postUrl && (
           <>
             <Toolbar.Link
               className="bg-transparent text-mauve11 inline-flex justify-center items-center hover:bg-transparent hover:cursor-pointer flex-shrink-0 flex-grow-0 basis-auto h-[25px] px-[5px] rounded text-[13px] leading-none  ml-0.5 outline-none hover:bg-violet3 hover:text-violet11 focus:relative focus:shadow-[0_0_0_2px] focus:shadow-violet7 first:ml-0 data-[state=on]:bg-secondary data-[state=on]:text-secondary-content"
@@ -94,7 +94,7 @@ export function ShareEditor(props: MarkdownEditorProps) {
     <div className="p-5 mx-auto w-full md:w-[768px]">
       <MarktionEditor
         placeholder="Enter with your markdown text..."
-        {...props}
+        {...editorProps}
         onChange={({ tr, helpers }) => {
           if (tr?.docChanged) {
             const markdown = helpers.getMarkdown();

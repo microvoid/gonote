@@ -11,8 +11,18 @@ export const getPostBySlug = async (slug: string) => {
   });
 };
 
-export const getUserPosts = async (userId: string) => {
+export const getUserPosts = async (
+  userId: string,
+  cursorId?: string,
+  take = 15
+) => {
   return prisma.post.findMany({
+    cursor: cursorId
+      ? {
+          id: cursorId,
+        }
+      : undefined,
+    take,
     where: {
       userId,
     },

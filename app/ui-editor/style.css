@@ -3,9 +3,12 @@
 
 .remirror-editor-wrapper {
   height: 100%;
-  padding: 1px 1px 46px;
   box-sizing: border-box;
   overflow: auto;
+}
+
+.marktion-editor-editable .remirror-editor-wrapper {
+  padding-bottom: 46px;
 }
 
 .remirror-editor-wrapper .prose {

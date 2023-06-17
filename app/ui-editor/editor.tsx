@@ -5,6 +5,7 @@ import type {
   UseRemirrorReturn,
   UseThemeProps,
 } from "@remirror/react";
+import classnames from "classnames";
 import React, { useCallback, useImperativeHandle, useRef } from "react";
 import { EditorComponent, Remirror, useRemirror } from "@remirror/react";
 
@@ -35,7 +36,15 @@ export const RemirrorEditor = React.forwardRef<
   React.PropsWithChildren<MarkdownEditorProps>
 >(
   (
-    { placeholder, children, theme, toolbarProps, classNames = [], ...rest },
+    {
+      placeholder,
+      children,
+      theme,
+      toolbarProps,
+      editable = true,
+      classNames = [],
+      ...rest
+    },
     ref
   ) => {
     const extensions = useCallback(
@@ -53,7 +62,15 @@ export const RemirrorEditor = React.forwardRef<
     });
 
     return (
-      <div className="shadow-md rounded-md border relative">
+      <div
+        className={classnames(
+          "marktion-editor",
+          {
+            "marktion-editor-editable": editable,
+          },
+          "shadow-md rounded-md border relative"
+        )}
+      >
         <Remirror
           manager={remirror.manager}
           classNames={[
@@ -69,14 +86,14 @@ export const RemirrorEditor = React.forwardRef<
           ]}
           autoFocus
           {...rest}
+          editable={editable}
         >
-          <BubbleToolbar />
-          <SlashToolbar />
-
           <EditorComponent />
-          {children}
 
-          <EditorToolbar {...toolbarProps} />
+          {editable && <SlashToolbar />}
+          {editable && <BubbleToolbar />}
+          {editable && <EditorToolbar {...toolbarProps} />}
+          {children}
         </Remirror>
       </div>
     );
