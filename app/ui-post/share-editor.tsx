@@ -5,12 +5,16 @@ import * as Toolbar from "@radix-ui/react-toolbar";
 import { useCallback, useMemo, useState } from "react";
 import { debounce } from "lodash";
 import { Post } from "@prisma/client";
-import { DownloadIcon, UpdateIcon, ClockIcon } from "@radix-ui/react-icons";
+import {
+  UpdateIcon,
+  ClockIcon,
+  DotsHorizontalIcon,
+} from "@radix-ui/react-icons";
 import { MarkdownEditorProps, MarktionEditor } from "../ui-editor";
-import { downloadFile } from "../utils/file";
-import { siteConstants } from "../constants";
+
 import { ToolbarBtn } from "../ui-editor-toolbar";
 import { fromNow } from "../utils/time";
+import { PostDropmenu } from "./post-dropmenu";
 
 type ShareEditorProps = MarkdownEditorProps & {
   defaultPost?: Post;
@@ -97,13 +101,6 @@ function EditorToolbar({
   isSaving: boolean;
   isFocus: boolean;
 }) {
-  const onExportMarkdown = () => {
-    downloadFile(
-      `${post?.title || siteConstants.brand}.md`,
-      post?.markdown || ""
-    );
-  };
-
   const postUrl = post ? `${location.origin}/m/${post.slug}` : null;
 
   const toolbarSuffixNode = (
@@ -128,14 +125,17 @@ function EditorToolbar({
         {isSaving && <UpdateIcon className="animate-spin" />}
       </div>
 
-      <Toolbar.Button
-        className="px-[10px] text-primary-content bg-primary flex-shrink-0 flex-grow-0 basis-auto h-[25px] rounded inline-flex text-[13px] leading-none items-center justify-center outline-none hover:bg-violet10 focus:relative focus:shadow-[0_0_0_2px] focus:shadow-violet7"
-        style={{ marginLeft: "auto" }}
-        title="export as markdown file"
-        onClick={onExportMarkdown}
-      >
-        <DownloadIcon />
-      </Toolbar.Button>
+      {post && (
+        <PostDropmenu post={post}>
+          <Toolbar.Button
+            className="bg-transparent text-mauve11 inline-flex justify-center items-center hover:bg-transparent hover:cursor-pointer flex-shrink-0 flex-grow-0 basis-auto h-[25px] px-[5px] rounded text-[13px] leading-none  ml-0.5 outline-none hover:bg-violet3 hover:text-violet11 focus:relative focus:shadow-[0_0_0_2px] focus:shadow-violet7 first:ml-0 data-[state=on]:bg-secondary data-[state=on]:text-secondary-content"
+            style={{ marginLeft: "auto" }}
+            title="export as markdown file"
+          >
+            <DotsHorizontalIcon />
+          </Toolbar.Button>
+        </PostDropmenu>
+      )}
     </>
   );
 
@@ -153,7 +153,7 @@ function EditorToolbar({
 
 function PostMeta({ post }: { post: Post }) {
   return (
-    <div className="text-mauve11 h-[25px] px-[5px] rounded inline-flex text-[13px] leading-none items-center justify-center  ml-0.5 outline-none first:ml-0">
+    <div className="text-mauve11 h-[26px] px-[5px] rounded inline-flex text-[13px] leading-none items-center justify-center  ml-0.5 outline-none first:ml-0">
       <ClockIcon className="mr-1 inline" /> {fromNow(post.updatedAt)}
     </div>
   );
