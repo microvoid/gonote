@@ -3,7 +3,7 @@
 import { createReactManager } from "@remirror/react";
 import { RemirrorSSR, RemirrorSSRProps } from "@remirror/react-ssr";
 import { createExtensions } from "../ui-editor-extensions/extensions";
-import { SSRExtension } from "../ui-editor-extensions/remirror-extension-marktion-ssr";
+import { SSRExtension } from "../ui-editor-extensions/extension-marktion-ssr";
 
 export type MarktionSSRProps = Partial<
   RemirrorSSRProps<ReturnType<typeof createExtensionsWithSSR>[number]>

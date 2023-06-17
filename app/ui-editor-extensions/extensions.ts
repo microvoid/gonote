@@ -21,7 +21,7 @@ import {
   TrailingNodeExtension,
   HorizontalRuleExtension,
 } from "remirror/extensions";
-import { MarkdownExtension } from "./remirror-extension-marktion";
+import { MarkdownExtension } from "./extension-marktion";
 
 export type MarktionExtension = ReturnType<typeof createExtensions>[number];
 
