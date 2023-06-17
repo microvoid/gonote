@@ -29,7 +29,7 @@ export type MarkdownEditorRef = UseRemirrorReturn<MarktionExtension>;
 /**
  * The editor which is used to create the annotation. Supports formatting.
  */
-export const RemirrorEditor = React.forwardRef<
+export const MarktionEditor = React.forwardRef<
   MarkdownEditorRef,
   React.PropsWithChildren<MarkdownEditorProps>
 >(
@@ -87,10 +87,4 @@ export const RemirrorEditor = React.forwardRef<
   }
 );
 
-RemirrorEditor.displayName = "RemirrorEditor";
-
-export function MarktionEditor(props: MarkdownEditorProps) {
-  const ref = useRef<MarkdownEditorRef>(null);
-
-  return <RemirrorEditor ref={ref} {...props} />;
-}
+MarktionEditor.displayName = "MarktionEditor";

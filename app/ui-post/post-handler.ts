@@ -6,6 +6,7 @@ import { siteConstants } from "../constants";
 export enum HandlerKey {
   download,
   delete,
+  commit,
 }
 
 export async function handler(key: HandlerKey, post: Post) {

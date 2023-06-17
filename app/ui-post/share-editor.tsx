@@ -2,31 +2,41 @@
 
 import fetch from "axios";
 import * as Toolbar from "@radix-ui/react-toolbar";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { debounce } from "lodash";
 import { Post } from "@prisma/client";
 import {
   UpdateIcon,
   ClockIcon,
   DotsHorizontalIcon,
+  PaperPlaneIcon,
 } from "@radix-ui/react-icons";
-import { MarkdownEditorProps, MarktionEditor } from "../ui-editor";
+import {
+  MarkdownEditorProps,
+  MarkdownEditorRef,
+  MarktionEditor,
+} from "../ui-editor";
 
 import { ToolbarBtn } from "../ui-editor-toolbar";
 import { fromNow } from "../utils/time";
 import { PostDropmenu, PostDropmenuProps } from "./post-dropmenu";
+import { HandlerKey } from "./post-handler";
 
 export type ShareEditorProps = MarkdownEditorProps & {
   defaultPost?: Post;
-  onSelectMenu?: PostDropmenuProps["onSelectMenu"];
+  toolbarProps?: {
+    onSelectMenu?: PostDropmenuProps["onSelectMenu"];
+    isCommitBtnShow?: EditorToolbarProps["isCommitBtnShow"];
+  };
 };
 
 export function ShareEditor({
   defaultPost,
   initialContent,
-  onSelectMenu,
+  toolbarProps,
   ...editorProps
 }: ShareEditorProps) {
+  const editorRef = useRef<MarkdownEditorRef>(null);
   const [isFocus, setFocus] = useState(false);
   const [post, setPost] = useState(defaultPost);
   const [isSaving, setIsSaving] = useState(false);
@@ -65,6 +75,17 @@ export function ShareEditor({
     [postId]
   );
 
+  const onCommit = useCallback(() => {
+    setPost(undefined);
+    setIsSaving(false);
+
+    editorRef.current?.getContext()?.clearContent();
+
+    if (post) {
+      toolbarProps?.onSelectMenu?.(HandlerKey.commit, post);
+    }
+  }, [toolbarProps, post]);
+
   const onFocus = useCallback(() => {
     setFocus(true);
   }, []);
@@ -77,6 +98,7 @@ export function ShareEditor({
     <MarktionEditor
       placeholder="Enter with your markdown text..."
       {...editorProps}
+      ref={editorRef}
       onFocus={onFocus}
       onBlur={onBlur}
       initialContent={initialContent}
@@ -93,23 +115,30 @@ export function ShareEditor({
         post={post}
         isSaving={isSaving}
         isFocus={isFocus}
-        onSelectMenu={onSelectMenu}
+        onCommit={onCommit}
+        {...toolbarProps}
       />
     </MarktionEditor>
   );
 }
 
+type EditorToolbarProps = {
+  post?: Post;
+  isSaving: boolean;
+  isFocus: boolean;
+  isCommitBtnShow?: boolean;
+  onSelectMenu?: PostDropmenuProps["onSelectMenu"];
+  onCommit?: () => void;
+};
+
 function EditorToolbar({
   post,
   isSaving,
   isFocus,
+  isCommitBtnShow,
   onSelectMenu,
-}: {
-  post?: Post;
-  isSaving: boolean;
-  isFocus: boolean;
-  onSelectMenu?: ShareEditorProps["onSelectMenu"];
-}) {
+  onCommit,
+}: EditorToolbarProps) {
   const postUrl = post ? `${location.origin}/m/${post.slug}` : null;
 
   const toolbarSuffixNode = (
@@ -134,17 +163,28 @@ function EditorToolbar({
         {isSaving && <UpdateIcon className="animate-spin" />}
       </div>
 
-      {post && (
-        <PostDropmenu post={post} onSelectMenu={onSelectMenu}>
+      <div className="ml-auto">
+        {post && isCommitBtnShow && (
           <Toolbar.Button
+            onClick={onCommit}
             className="bg-transparent text-mauve11 inline-flex justify-center items-center hover:bg-transparent hover:cursor-pointer flex-shrink-0 flex-grow-0 basis-auto h-[25px] px-[5px] rounded text-[13px] leading-none  ml-0.5 outline-none hover:bg-violet3 hover:text-violet11 focus:relative focus:shadow-[0_0_0_2px] focus:shadow-violet7 first:ml-0 data-[state=on]:bg-secondary data-[state=on]:text-secondary-content"
-            style={{ marginLeft: "auto" }}
             title="export as markdown file"
           >
-            <DotsHorizontalIcon />
+            <PaperPlaneIcon />
           </Toolbar.Button>
-        </PostDropmenu>
-      )}
+        )}
+
+        {post && (
+          <PostDropmenu post={post} onSelectMenu={onSelectMenu}>
+            <Toolbar.Button
+              className="bg-transparent text-mauve11 inline-flex justify-center items-center hover:bg-transparent hover:cursor-pointer flex-shrink-0 flex-grow-0 basis-auto h-[25px] px-[5px] rounded text-[13px] leading-none  ml-0.5 outline-none hover:bg-violet3 hover:text-primary focus:relative focus:shadow-[0_0_0_2px] focus:shadow-violet7 first:ml-0 data-[state=on]:bg-secondary data-[state=on]:text-secondary-content"
+              title="export as markdown file"
+            >
+              <DotsHorizontalIcon />
+            </Toolbar.Button>
+          </PostDropmenu>
+        )}
+      </div>
     </>
   );
 
