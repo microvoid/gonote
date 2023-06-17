@@ -91,7 +91,7 @@ export function ShareEditor(props: MarkdownEditorProps) {
   );
 
   return (
-    <div className="p-5 mx-auto md:w-[768px]">
+    <div className="p-5 mx-auto w-full md:w-[768px]">
       <MarktionEditor
         placeholder="Enter with your markdown text..."
         {...props}
