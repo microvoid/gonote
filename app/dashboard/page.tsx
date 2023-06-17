@@ -19,7 +19,7 @@ export default async function Dashboard() {
 
   return (
     <div className="p-5 mx-auto md:w-[768px]">
-      <div className="h-[178px] mb-6">
+      <div className="mb-6">
         <ShareEditor classNames={["min-h-[130px]"]} />
       </div>
 
