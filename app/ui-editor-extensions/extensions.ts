@@ -19,6 +19,7 @@ import {
   TableExtension,
   TaskListExtension,
   TrailingNodeExtension,
+  HorizontalRuleExtension,
 } from "remirror/extensions";
 import { MarkdownExtension } from "./remirror-extension-marktion";
 
@@ -31,6 +32,7 @@ export const createExtensions = (placeholder?: string) => {
     new BoldExtension(),
     new StrikeExtension(),
     new ItalicExtension(),
+    new HorizontalRuleExtension(),
     new HeadingExtension(),
     new BlockquoteExtension(),
     new ImageExtension(),

@@ -19,6 +19,10 @@
   font-weight: 600;
 }
 
+.remirror-editor-wrapper hr.ProseMirror-selectednode {
+  @apply outline-2 outline-violet-400 outline;
+}
+
 .remirror-editor-wrapper .remirror-is-empty:first-of-type::before {
   position: absolute;
   color: #aaa;

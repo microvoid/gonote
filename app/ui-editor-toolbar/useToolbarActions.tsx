@@ -19,6 +19,7 @@ import {
   BorderRightIcon,
   BorderTopIcon,
   CodeIcon,
+  DividerHorizontalIcon,
   FontBoldIcon,
   FontItalicIcon,
   ListBulletIcon,
@@ -27,12 +28,13 @@ import {
   TableIcon,
   TextIcon,
 } from "@radix-ui/react-icons";
-import { MarkExtension } from "remirror";
+import { MarktionExtension } from "../ui-editor-extensions/extensions";
 
 export function useToolbarActions() {
   const ctx = useRemirrorContext();
   const {
     convertParagraph: toggleParagraph,
+    insertHorizontalRule: toggleHorizontalRule,
     toggleBlockquote,
     toggleCodeBlock,
     toggleHeading,
@@ -40,9 +42,9 @@ export function useToolbarActions() {
     toggleBulletList,
     toggleTaskList,
     createTable,
-  } = useCommands<MarkExtension | ParagraphExtension>();
+  } = useCommands<MarktionExtension | ParagraphExtension>();
 
-  const active = useActive<MarkExtension | ParagraphExtension>();
+  const active = useActive<MarktionExtension | ParagraphExtension>();
 
   const { tools: TableTools } = useTableTools();
 
@@ -160,6 +162,16 @@ export function useToolbarActions() {
       },
       icon: <TableIcon className="w-[14px] h-[14px]" />,
     },
+    {
+      key: "divider",
+      active: active.horizontalRule(),
+      toggle: () => {
+        if (toggleHorizontalRule.enabled()) {
+          toggleHorizontalRule();
+        }
+      },
+      icon: <DividerHorizontalIcon className="w-[14px] h-[14px]" />,
+    },
   ];
 
   const blockFormatValues = Tools.filter(item => item.active).map(
@@ -261,10 +273,10 @@ export function useTableTools() {
 
 export function useInlineTools() {
   const { toggleBold, toggleItalic, toggleStrike, toggleCode } = useCommands<
-    MarkExtension | ParagraphExtension
+    MarktionExtension | ParagraphExtension
   >();
 
-  const active = useActive<MarkExtension | ParagraphExtension>();
+  const active = useActive<MarktionExtension | ParagraphExtension>();
 
   const tools = [
     {
