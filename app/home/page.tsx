@@ -35,7 +35,10 @@ export default async function Home() {
       {/* <OSS /> */}
 
       <div className="p-5 mx-auto w-full md:w-[768px]">
-        <ShareEditor initialContent={initialContent} />
+        <ShareEditor
+          initialContent={initialContent}
+          classNames={["min-h-[200px]"]}
+        />
       </div>
 
       {/* <Hero /> */}

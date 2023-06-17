@@ -1,28 +1,34 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { DownloadIcon, TrashIcon } from "@radix-ui/react-icons";
-import { downloadFile } from "../utils/file";
-import { siteConstants } from "../constants";
 import { Post } from "@prisma/client";
+import { HandlerKey } from "./post-handler";
 
-type PostDropmenuProps = React.PropsWithChildren<{
+export type Menu = (typeof menus)[number];
+
+export type PostDropmenuProps = React.PropsWithChildren<{
   post: Post;
+  onSelectMenu?: (key: HandlerKey, post: Post) => void;
 }>;
 
-export function PostDropmenu({ post, children }: PostDropmenuProps) {
-  const menus = [
-    {
-      key: "download",
-      prefix: <DownloadIcon />,
-      sufix: null,
-      title: "export as markdown",
-    },
-    {
-      key: "delete",
-      prefix: <TrashIcon />,
-      title: "delete",
-    },
-  ];
+const menus = [
+  {
+    key: HandlerKey.download,
+    prefix: <DownloadIcon />,
+    sufix: null,
+    title: "export as markdown",
+  },
+  {
+    key: HandlerKey.delete,
+    prefix: <TrashIcon />,
+    title: "delete",
+  },
+];
 
+export function PostDropmenu({
+  post,
+  children,
+  onSelectMenu,
+}: PostDropmenuProps) {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>{children}</DropdownMenu.Trigger>
@@ -36,7 +42,8 @@ export function PostDropmenu({ post, children }: PostDropmenuProps) {
             return (
               <DropdownMenu.Item
                 key={menu.key}
-                className="group text-[13px] leading-none text-violet11 flex items-center h-[25px] px-3 relative select-none outline-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-violet9 data-[highlighted]:text-violet1"
+                onClick={() => onSelectMenu?.(menu.key, post)}
+                className="group cursor-pointer text-[13px] leading-none text-violet11 flex items-center h-[25px] px-3 relative select-none outline-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-violet9 data-[highlighted]:text-violet1"
               >
                 <span className="mr-2">{menu.prefix}</span> {menu.title}
                 {/* <div className="ml-auto pl-[20px] text-mauve11 group-data-[highlighted]:text-white group-data-[disabled]:text-mauve8">

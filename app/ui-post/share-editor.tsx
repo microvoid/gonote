@@ -14,15 +14,17 @@ import { MarkdownEditorProps, MarktionEditor } from "../ui-editor";
 
 import { ToolbarBtn } from "../ui-editor-toolbar";
 import { fromNow } from "../utils/time";
-import { PostDropmenu } from "./post-dropmenu";
+import { PostDropmenu, PostDropmenuProps } from "./post-dropmenu";
 
-type ShareEditorProps = MarkdownEditorProps & {
+export type ShareEditorProps = MarkdownEditorProps & {
   defaultPost?: Post;
+  onSelectMenu?: PostDropmenuProps["onSelectMenu"];
 };
 
 export function ShareEditor({
   defaultPost,
   initialContent,
+  onSelectMenu,
   ...editorProps
 }: ShareEditorProps) {
   const [isFocus, setFocus] = useState(false);
@@ -87,7 +89,12 @@ export function ShareEditor({
         }
       }}
     >
-      <EditorToolbar post={post} isSaving={isSaving} isFocus={isFocus} />
+      <EditorToolbar
+        post={post}
+        isSaving={isSaving}
+        isFocus={isFocus}
+        onSelectMenu={onSelectMenu}
+      />
     </MarktionEditor>
   );
 }
@@ -96,10 +103,12 @@ function EditorToolbar({
   post,
   isSaving,
   isFocus,
+  onSelectMenu,
 }: {
   post?: Post;
   isSaving: boolean;
   isFocus: boolean;
+  onSelectMenu?: ShareEditorProps["onSelectMenu"];
 }) {
   const postUrl = post ? `${location.origin}/m/${post.slug}` : null;
 
@@ -126,7 +135,7 @@ function EditorToolbar({
       </div>
 
       {post && (
-        <PostDropmenu post={post}>
+        <PostDropmenu post={post} onSelectMenu={onSelectMenu}>
           <Toolbar.Button
             className="bg-transparent text-mauve11 inline-flex justify-center items-center hover:bg-transparent hover:cursor-pointer flex-shrink-0 flex-grow-0 basis-auto h-[25px] px-[5px] rounded text-[13px] leading-none  ml-0.5 outline-none hover:bg-violet3 hover:text-violet11 focus:relative focus:shadow-[0_0_0_2px] focus:shadow-violet7 first:ml-0 data-[state=on]:bg-secondary data-[state=on]:text-secondary-content"
             style={{ marginLeft: "auto" }}

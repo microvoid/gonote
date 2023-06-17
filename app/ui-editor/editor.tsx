@@ -66,7 +66,6 @@ export const RemirrorEditor = React.forwardRef<
           classNames={[
             "w-full",
             "h-full",
-            "min-h-[200px]",
             "max-h-[700px]",
             "p-3",
             "overflow-auto",
