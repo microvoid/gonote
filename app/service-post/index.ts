@@ -34,8 +34,7 @@ export const upsertPost = ApiHandler.auth(async (req, ctx, session) => {
 });
 
 export const getUserPosts = ApiHandler.auth(async (req, ctx, session) => {
-  const { cursorId } = await req.json();
-  const res = await PostModel.getUserPosts(session.user.id, cursorId);
+  const res = await PostModel.getUserPosts(session.user.id);
 
   return ApiHandler.success(res);
 });

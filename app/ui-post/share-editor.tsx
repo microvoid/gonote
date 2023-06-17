@@ -2,24 +2,32 @@
 
 import fetch from "axios";
 import * as Toolbar from "@radix-ui/react-toolbar";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { debounce } from "lodash";
 import { Post } from "@prisma/client";
-import { DownloadIcon, UpdateIcon } from "@radix-ui/react-icons";
+import { DownloadIcon, UpdateIcon, ClockIcon } from "@radix-ui/react-icons";
 import { MarkdownEditorProps, MarktionEditor } from "../ui-editor";
 import { downloadFile } from "../utils/file";
 import { siteConstants } from "../constants";
+import { ToolbarBtn } from "../ui-editor-toolbar";
+import { fromNow } from "../utils/time";
 
 type ShareEditorProps = MarkdownEditorProps & {
   defaultPost?: Post;
 };
 
-export function ShareEditor({ defaultPost, ...editorProps }: ShareEditorProps) {
+export function ShareEditor({
+  defaultPost,
+  initialContent,
+  ...editorProps
+}: ShareEditorProps) {
+  const [isFocus, setFocus] = useState(false);
   const [post, setPost] = useState(defaultPost);
-  const [draft, setDraft] = useState("");
   const [isSaving, setIsSaving] = useState(false);
 
   const postId = post?.id;
+
+  initialContent = post?.markdown || initialContent;
 
   const onUpdateOrCreatePost = useMemo(
     () =>
@@ -51,8 +59,49 @@ export function ShareEditor({ defaultPost, ...editorProps }: ShareEditorProps) {
     [postId]
   );
 
+  const onFocus = useCallback(() => {
+    setFocus(true);
+  }, []);
+
+  const onBlur = useCallback(() => {
+    setFocus(false);
+  }, []);
+
+  return (
+    <MarktionEditor
+      placeholder="Enter with your markdown text..."
+      {...editorProps}
+      onFocus={onFocus}
+      onBlur={onBlur}
+      initialContent={initialContent}
+      onChange={({ tr, helpers }) => {
+        if (tr?.docChanged) {
+          const markdown = helpers.getMarkdown();
+          const title = getMarktionTitle(markdown) || null;
+
+          onUpdateOrCreatePost(markdown, title);
+        }
+      }}
+    >
+      <EditorToolbar post={post} isSaving={isSaving} isFocus={isFocus} />
+    </MarktionEditor>
+  );
+}
+
+function EditorToolbar({
+  post,
+  isSaving,
+  isFocus,
+}: {
+  post?: Post;
+  isSaving: boolean;
+  isFocus: boolean;
+}) {
   const onExportMarkdown = () => {
-    downloadFile(`${post?.title || siteConstants.brand}.md`, draft);
+    downloadFile(
+      `${post?.title || siteConstants.brand}.md`,
+      post?.markdown || ""
+    );
   };
 
   const postUrl = post ? `${location.origin}/m/${post.slug}` : null;
@@ -91,23 +140,21 @@ export function ShareEditor({ defaultPost, ...editorProps }: ShareEditorProps) {
   );
 
   return (
-    <div className="p-5 mx-auto w-full md:w-[768px]">
-      <MarktionEditor
-        placeholder="Enter with your markdown text..."
-        {...editorProps}
-        onChange={({ tr, helpers }) => {
-          if (tr?.docChanged) {
-            const markdown = helpers.getMarkdown();
-            const title = getMarktionTitle(markdown) || null;
+    <Toolbar.Root
+      className="flex p-[10px] w-full min-w-max absolute bottom-0"
+      aria-label="Formatting options"
+    >
+      {(isFocus || !post) && <ToolbarBtn />}
+      {!isFocus && post && <PostMeta post={post} />}
+      {toolbarSuffixNode}
+    </Toolbar.Root>
+  );
+}
 
-            setDraft(markdown);
-            onUpdateOrCreatePost(markdown, title);
-          }
-        }}
-        toolbarProps={{
-          suffix: toolbarSuffixNode,
-        }}
-      />
+function PostMeta({ post }: { post: Post }) {
+  return (
+    <div className="text-mauve11 h-[25px] px-[5px] rounded inline-flex text-[13px] leading-none items-center justify-center  ml-0.5 outline-none first:ml-0">
+      <ClockIcon className="mr-1 inline" /> {fromNow(post.updatedAt)}
     </div>
   );
 }

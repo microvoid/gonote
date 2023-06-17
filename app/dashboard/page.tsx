@@ -1,7 +1,12 @@
+import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
 import { ApiHandler } from "../lib-auth";
 import { PostModel } from "../model";
-import { Posts } from "../ui-post/post-list";
+import { PostCards } from "../ui-post/post-cards";
+
+const ShareEditor = dynamic(() => import("../ui-post/share-editor"), {
+  ssr: false,
+});
 
 export default async function Dashboard() {
   const session = await ApiHandler.session();
@@ -14,7 +19,11 @@ export default async function Dashboard() {
 
   return (
     <div className="p-5 mx-auto md:w-[768px]">
-      <Posts defaultPosts={posts} />
+      <div className="h-[178px] mb-6">
+        <ShareEditor classNames={["min-h-[130px]"]} />
+      </div>
+
+      <PostCards defaultPosts={posts} />
     </div>
   );
 }

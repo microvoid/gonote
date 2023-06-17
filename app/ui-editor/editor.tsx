@@ -11,7 +11,6 @@ import { EditorComponent, Remirror, useRemirror } from "@remirror/react";
 
 import {
   BubbleToolbar,
-  EditorToolbar,
   EditorToolbarProps,
   SlashToolbar,
 } from "../ui-editor-toolbar";
@@ -21,7 +20,6 @@ import {
 } from "../ui-editor-extensions/extensions";
 
 export type MarkdownEditorProps = {
-  placeholder?: string;
   toolbarProps?: EditorToolbarProps;
   theme?: UseThemeProps["theme"];
 } & Omit<RemirrorProps<MarktionExtension>, "manager">;
@@ -36,15 +34,7 @@ export const RemirrorEditor = React.forwardRef<
   React.PropsWithChildren<MarkdownEditorProps>
 >(
   (
-    {
-      placeholder,
-      children,
-      theme,
-      toolbarProps,
-      editable = true,
-      classNames = [],
-      ...rest
-    },
+    { placeholder, children, theme, editable = true, classNames = [], ...rest },
     ref
   ) => {
     const extensions = useCallback(
@@ -84,7 +74,6 @@ export const RemirrorEditor = React.forwardRef<
             "prose",
             ...classNames,
           ]}
-          autoFocus
           {...rest}
           editable={editable}
         >
@@ -92,7 +81,6 @@ export const RemirrorEditor = React.forwardRef<
 
           {editable && <SlashToolbar />}
           {editable && <BubbleToolbar />}
-          {editable && <EditorToolbar {...toolbarProps} />}
           {children}
         </Remirror>
       </div>

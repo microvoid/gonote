@@ -6,7 +6,7 @@ import { Post, User } from "@prisma/client";
 import { renderTitle, renderTitleDesc } from "./segments";
 import { MarktionSSR } from "../ui-editor";
 
-const ShareEditor = dynamic(() => import("../ui-home/share-editor"), {
+const ShareEditor = dynamic(() => import("./share-editor"), {
   ssr: false,
 });
 
