@@ -2,7 +2,7 @@
 
 import { createReactManager } from "@remirror/react";
 import { RemirrorSSR, RemirrorSSRProps } from "@remirror/react-ssr";
-import { createExtensions } from "./extensions";
+import { createExtensions } from "../ui-editor-extensions/extensions";
 import { SSRExtension } from "../ui-editor-extensions/remirror-extension-marktion-ssr";
 
 export type MarktionSSRProps = Partial<

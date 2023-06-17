@@ -20,7 +20,9 @@ import {
   TaskListExtension,
   TrailingNodeExtension,
 } from "remirror/extensions";
-import { MarkdownExtension } from "../ui-editor-extensions/remirror-extension-marktion";
+import { MarkdownExtension } from "./remirror-extension-marktion";
+
+export type MarktionExtension = ReturnType<typeof createExtensions>[number];
 
 export const createExtensions = (placeholder?: string) => {
   return [

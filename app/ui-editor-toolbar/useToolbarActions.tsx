@@ -1,17 +1,8 @@
 import { useActive, useCommands, useRemirrorContext } from "@remirror/react";
 import {
-  BlockquoteExtension,
-  BoldExtension,
-  CodeBlockExtension,
-  ItalicExtension,
-  StrikeExtension,
-  HeadingExtension,
   HeadingExtensionAttributes,
-  BulletListExtension,
-  OrderedListExtension,
-  TaskListExtension,
   TableExtension,
-  CodeExtension,
+  ParagraphExtension,
 } from "remirror/extensions";
 import {
   Code,
@@ -21,7 +12,7 @@ import {
   ListChecksIcon,
   ListOrderedIcon,
 } from "lucide-react";
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import {
   BorderBottomIcon,
   BorderLeftIcon,
@@ -34,33 +25,41 @@ import {
   QuoteIcon,
   StrikethroughIcon,
   TableIcon,
+  TextIcon,
 } from "@radix-ui/react-icons";
+import { MarkExtension } from "remirror";
 
 export function useToolbarActions() {
   const ctx = useRemirrorContext();
+  const {
+    convertParagraph: toggleParagraph,
+    toggleBlockquote,
+    toggleCodeBlock,
+    toggleHeading,
+    toggleOrderedList,
+    toggleBulletList,
+    toggleTaskList,
+    createTable,
+  } = useCommands<MarkExtension | ParagraphExtension>();
 
-  const { toggleBlockquote } = useCommands<BlockquoteExtension>();
-  const { toggleCodeBlock } = useCommands<CodeBlockExtension>();
-  const { toggleHeading } = useCommands<HeadingExtension>();
-  const { toggleOrderedList } = useCommands<OrderedListExtension>();
-  const { toggleBulletList } = useCommands<BulletListExtension>();
-  const { toggleTaskList } = useCommands<TaskListExtension>();
-  const { createTable } = useCommands<TableExtension>();
-
-  const blockquoteActive = useActive<BlockquoteExtension>();
-  const codeblockActive = useActive<CodeBlockExtension>();
-  const headingActive = useActive<HeadingExtension>();
-  const orderedListActive = useActive<OrderedListExtension>();
-  const bulletListActive = useActive<BulletListExtension>();
-  const taskListActive = useActive<TaskListExtension>();
-  const tableActive = useActive<TableExtension>();
+  const active = useActive<MarkExtension | ParagraphExtension>();
 
   const { tools: TableTools } = useTableTools();
 
   const Tools = [
     {
+      key: "paragraph",
+      active: active.paragraph(),
+      toggle: () => {
+        if (toggleParagraph.enabled()) {
+          toggleParagraph();
+        }
+      },
+      icon: <TextIcon className="w-[14px] h-[14px]" />,
+    },
+    {
       key: "heading1",
-      active: headingActive.heading({ level: 1 }),
+      active: active.heading({ level: 1 }),
       toggle: () => {
         if (toggleHeading.enabled()) {
           toggleHeading({
@@ -72,7 +71,7 @@ export function useToolbarActions() {
     },
     {
       key: "heading2",
-      active: headingActive.heading({ level: 2 }),
+      active: active.heading({ level: 2 }),
       toggle: () => {
         if (toggleHeading.enabled()) {
           toggleHeading({
@@ -84,7 +83,7 @@ export function useToolbarActions() {
     },
     {
       key: "heading3",
-      active: headingActive.heading({ level: 3 }),
+      active: active.heading({ level: 3 }),
       toggle: () => {
         if (toggleHeading.enabled()) {
           toggleHeading({
@@ -96,7 +95,7 @@ export function useToolbarActions() {
     },
     {
       key: "ordered-list",
-      active: orderedListActive.orderedList(),
+      active: active.orderedList(),
       toggle: () => {
         if (toggleOrderedList.enabled()) {
           toggleOrderedList();
@@ -106,7 +105,7 @@ export function useToolbarActions() {
     },
     {
       key: "bullet-list",
-      active: bulletListActive.bulletList(),
+      active: active.bulletList(),
       toggle: () => {
         if (toggleBulletList.enabled()) {
           toggleBulletList();
@@ -116,7 +115,7 @@ export function useToolbarActions() {
     },
     {
       key: "task-list",
-      active: taskListActive.taskList(),
+      active: active.taskList(),
       toggle: () => {
         if (toggleTaskList.enabled()) {
           toggleTaskList();
@@ -126,7 +125,7 @@ export function useToolbarActions() {
     },
     {
       key: "blockquote",
-      active: blockquoteActive.blockquote(),
+      active: active.blockquote(),
       toggle: () => {
         if (toggleBlockquote.enabled()) {
           toggleBlockquote();
@@ -136,7 +135,7 @@ export function useToolbarActions() {
     },
     {
       key: "codeblock",
-      active: codeblockActive.codeBlock(),
+      active: active.codeBlock(),
       toggle: () => {
         if (toggleCodeBlock.enabled()) {
           toggleCodeBlock();
@@ -146,7 +145,7 @@ export function useToolbarActions() {
     },
     {
       key: "table",
-      active: tableActive.table(),
+      active: active.table(),
       toggle: () => {
         if (createTable.enabled()) {
           const cellContent = ctx.schema.nodes.paragraph.create({ level: 3 }, [
@@ -189,7 +188,7 @@ export function useToolbarActions() {
     }, [toggleBlockquote, toggleCodeBlock, toggleHeading]);
 
   return {
-    Tools: tableActive.table() ? TableTools : Tools,
+    Tools: active.table() ? TableTools : Tools,
 
     blockFormatValues,
 
@@ -261,20 +260,16 @@ export function useTableTools() {
 }
 
 export function useInlineTools() {
-  const { toggleBold } = useCommands<BoldExtension>();
-  const { toggleItalic } = useCommands<ItalicExtension>();
-  const { toggleStrike } = useCommands<StrikeExtension>();
-  const { toggleCode } = useCommands<CodeExtension>();
+  const { toggleBold, toggleItalic, toggleStrike, toggleCode } = useCommands<
+    MarkExtension | ParagraphExtension
+  >();
 
-  const boldActive = useActive<BoldExtension>();
-  const italicActive = useActive<ItalicExtension>();
-  const strikeActive = useActive<StrikeExtension>();
-  const codeActive = useActive<CodeExtension>();
+  const active = useActive<MarkExtension | ParagraphExtension>();
 
   const tools = [
     {
       key: "bold",
-      active: boldActive.bold(),
+      active: active.bold(),
       toggle: () => {
         if (toggleBold.enabled()) {
           toggleBold();
@@ -284,7 +279,7 @@ export function useInlineTools() {
     },
     {
       key: "italic",
-      active: italicActive.italic(),
+      active: active.italic(),
       toggle: () => {
         if (toggleItalic.enabled()) {
           toggleItalic();
@@ -294,7 +289,7 @@ export function useInlineTools() {
     },
     {
       key: "strike",
-      active: strikeActive.strike(),
+      active: active.strike(),
       toggle: () => {
         if (toggleStrike.enabled()) {
           toggleStrike();
@@ -304,7 +299,7 @@ export function useInlineTools() {
     },
     {
       key: "code",
-      active: codeActive.code(),
+      active: active.code(),
       toggle: () => {
         if (toggleCode.enabled()) {
           toggleCode();

@@ -1,7 +1,6 @@
 "use client";
 
 import type {
-  ReactExtensions,
   RemirrorProps,
   UseRemirrorReturn,
   UseThemeProps,
@@ -15,16 +14,18 @@ import {
   EditorToolbarProps,
   SlashToolbar,
 } from "../ui-editor-toolbar";
-import { createExtensions } from "./extensions";
+import {
+  MarktionExtension,
+  createExtensions,
+} from "../ui-editor-extensions/extensions";
 
 export type MarkdownEditorProps = {
   placeholder?: string;
   toolbarProps?: EditorToolbarProps;
   theme?: UseThemeProps["theme"];
-} & Omit<RemirrorProps<MarktionExtensions[number]>, "manager">;
+} & Omit<RemirrorProps<MarktionExtension>, "manager">;
 
-export type MarkdownEditorRef = UseRemirrorReturn<ReactExtensions<any>>;
-export type MarktionExtensions = ReturnType<typeof createExtensions>;
+export type MarkdownEditorRef = UseRemirrorReturn<MarktionExtension>;
 
 /**
  * The editor which is used to create the annotation. Supports formatting.
@@ -44,7 +45,7 @@ export const RemirrorEditor = React.forwardRef<
   });
 
   useImperativeHandle(ref, () => {
-    return remirror;
+    return remirror as MarkdownEditorRef;
   });
 
   return (
