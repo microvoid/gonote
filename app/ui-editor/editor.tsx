@@ -33,48 +33,55 @@ export type MarkdownEditorRef = UseRemirrorReturn<MarktionExtension>;
 export const RemirrorEditor = React.forwardRef<
   MarkdownEditorRef,
   React.PropsWithChildren<MarkdownEditorProps>
->(({ placeholder, children, theme, toolbarProps, ...rest }, ref) => {
-  const extensions = useCallback(
-    () => createExtensions(placeholder),
-    [placeholder]
-  );
+>(
+  (
+    { placeholder, children, theme, toolbarProps, classNames = [], ...rest },
+    ref
+  ) => {
+    const extensions = useCallback(
+      () => createExtensions(placeholder),
+      [placeholder]
+    );
 
-  const remirror = useRemirror({
-    extensions,
-    stringHandler: "markdown",
-  });
+    const remirror = useRemirror({
+      extensions,
+      stringHandler: "markdown",
+    });
 
-  useImperativeHandle(ref, () => {
-    return remirror as MarkdownEditorRef;
-  });
+    useImperativeHandle(ref, () => {
+      return remirror as MarkdownEditorRef;
+    });
 
-  return (
-    <Remirror
-      manager={remirror.manager}
-      classNames={[
-        "w-full",
-        "h-full",
-        "p-3",
-        "prose",
-        "min-h-[200px]",
-        "shadow-md",
-        "outline-none",
-        "rounded-md",
-        "border",
-        "overflow-auto",
-      ]}
-      autoFocus
-      {...rest}
-    >
-      <EditorToolbar {...toolbarProps} />
-      <BubbleToolbar />
-      <SlashToolbar />
+    return (
+      <div className="shadow-md rounded-md border relative">
+        <Remirror
+          manager={remirror.manager}
+          classNames={[
+            "w-full",
+            "h-full",
+            "min-h-[200px]",
+            "max-h-[600px]",
+            "p-3",
+            "overflow-auto",
+            "outline-none",
+            "prose",
+            ...classNames,
+          ]}
+          autoFocus
+          {...rest}
+        >
+          <BubbleToolbar />
+          <SlashToolbar />
 
-      <EditorComponent />
-      {children}
-    </Remirror>
-  );
-});
+          <EditorComponent />
+          {children}
+
+          <EditorToolbar {...toolbarProps} />
+        </Remirror>
+      </div>
+    );
+  }
+);
 
 RemirrorEditor.displayName = "RemirrorEditor";
 

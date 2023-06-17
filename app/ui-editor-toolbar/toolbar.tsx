@@ -15,7 +15,7 @@ export function EditorToolbar(props: EditorToolbarProps) {
 
   return (
     <Toolbar.Root
-      className="flex p-[10px] mb-2 w-full min-w-max rounded-md shadow-md border"
+      className="flex p-[10px] w-full min-w-max absolute bottom-0"
       aria-label="Formatting options"
     >
       <Toolbar.ToggleGroup
@@ -56,7 +56,6 @@ export function EditorToolbar(props: EditorToolbarProps) {
         </Toolbar.ToggleItem>
       </Toolbar.ToggleGroup>
 
-      <Toolbar.Separator className="w-[1px] bg-mauve6 mx-[10px]" />
       {props.suffix}
 
       <Toast

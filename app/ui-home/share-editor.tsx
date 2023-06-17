@@ -17,7 +17,7 @@ export function ShareEditor(props: MarkdownEditorProps) {
   const [isSaving, setIsSaving] = useState(false);
   const [title, setTitle] = useState<string | null>(null);
 
-  const isDraftEditor = Boolean(postId);
+  const isPostEditing = Boolean(postId);
 
   const onUpdateOrCreatePost = useMemo(
     () =>
@@ -60,14 +60,20 @@ export function ShareEditor(props: MarkdownEditorProps) {
   const toolbarSuffixNode = (
     <>
       <div className="flex items-center">
-        {isDraftEditor && (
-          <Toolbar.Link
-            className="bg-transparent text-mauve11 inline-flex justify-center items-center hover:bg-transparent hover:cursor-pointer flex-shrink-0 flex-grow-0 basis-auto h-[25px] px-[5px] rounded text-[13px] leading-none  ml-0.5 outline-none hover:bg-violet3 hover:text-violet11 focus:relative focus:shadow-[0_0_0_2px] focus:shadow-violet7 first:ml-0 data-[state=on]:bg-secondary data-[state=on]:text-secondary-content"
-            href={postUrl}
-            target="_blank"
-          >
-            {postUrl}
-          </Toolbar.Link>
+        {(isSaving || isPostEditing) && (
+          <Toolbar.Separator className="w-[1px] h-full bg-mauve6 mx-[10px]" />
+        )}
+
+        {isPostEditing && (
+          <>
+            <Toolbar.Link
+              className="bg-transparent text-mauve11 inline-flex justify-center items-center hover:bg-transparent hover:cursor-pointer flex-shrink-0 flex-grow-0 basis-auto h-[25px] px-[5px] rounded text-[13px] leading-none  ml-0.5 outline-none hover:bg-violet3 hover:text-violet11 focus:relative focus:shadow-[0_0_0_2px] focus:shadow-violet7 first:ml-0 data-[state=on]:bg-secondary data-[state=on]:text-secondary-content"
+              href={postUrl}
+              target="_blank"
+            >
+              {postUrl}
+            </Toolbar.Link>
+          </>
         )}
 
         {isSaving && <UpdateIcon className="animate-spin" />}
