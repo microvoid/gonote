@@ -1,12 +1,19 @@
-import { Session } from "../types/session";
-import { getServerSession } from "next-auth";
-import { options } from "./options";
+import { Session, getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
+import { Auth } from "@auth/core";
+import Credentials from "@auth/core/providers/credentials";
+import { options } from "./options";
 
 type Authhandler = (req: Request, ctx: any, session: Session) => any;
 
 export const session = () => {
-  return getServerSession(options) as Promise<Session | null>;
+  return getServerSession(options);
+};
+
+export const authWithGuestUser = (req: Request) => {
+  return Auth(req, {
+    providers: [Credentials({})],
+  });
 };
 
 export const auth =

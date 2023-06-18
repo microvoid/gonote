@@ -5,7 +5,7 @@ export async function signInWithGuest() {
 
   if (!session) {
     return signIn("credentials", {
-      redirect: false,
+      redirect: true,
     });
   }
 
