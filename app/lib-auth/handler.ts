@@ -1,7 +1,7 @@
 import { Session, getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import { Auth } from "@auth/core";
-import Credentials from "@auth/core/providers/credentials";
+// import { Auth } from "@auth/core";
+// import Credentials from "@auth/core/providers/credentials";
 import { options } from "./options";
 
 type Authhandler = (req: Request, ctx: any, session: Session) => any;
@@ -10,11 +10,11 @@ export const session = () => {
   return getServerSession(options);
 };
 
-export const authWithGuestUser = (req: Request) => {
-  return Auth(req, {
-    providers: [Credentials({})],
-  });
-};
+// export const authWithGuestUser = (req: Request) => {
+//   return Auth(req, {
+//     providers: [Credentials({})],
+//   });
+// };
 
 export const auth =
   (handler: Authhandler) => async (req: Request, ctx: any) => {

@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 
+import { AnonymouseWarningToast } from "../ui-toast/anonymous-warning-toast";
 import { Hero } from "../ui-home/hero";
 import { OSS } from "../ui-home/oss";
 import { Nav } from "../ui-home/nav";
@@ -40,6 +41,8 @@ export default async function Home() {
           classNames={["min-h-[200px]"]}
         />
       </div>
+
+      <AnonymouseWarningToast />
 
       {/* <Hero /> */}
     </>
