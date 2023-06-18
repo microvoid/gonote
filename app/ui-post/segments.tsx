@@ -1,5 +1,10 @@
 import { Post, User } from "@prisma/client";
-import { TimerIcon, StarIcon, StarFilledIcon } from "@radix-ui/react-icons";
+import {
+  TimerIcon,
+  StarIcon,
+  StarFilledIcon,
+  EyeOpenIcon,
+} from "@radix-ui/react-icons";
 import { UserAvatar } from "./avatar";
 import { fromNow } from "../utils/time";
 
@@ -18,13 +23,14 @@ export const renderTitleDesc = (post: Post, user: User) => {
         <div>
           <div className=" text-slate-800 font-semibold">{user.name}</div>
           <div className="text-xs flex">
-            <TimerIcon className="mr-1 inline" />
+            <TimerIcon className="mx-1 inline" />
             {fromNow(post.createdAt)}
+            <EyeOpenIcon className="mx-1 inline" /> {post.clicks}
           </div>
         </div>
       </div>
       <div className="flex items-center">
-        {isStar ? <StarFilledIcon /> : <StarIcon />}
+        {/* {isStar ? <StarFilledIcon /> : <StarIcon />} */}
       </div>
     </div>
   );
