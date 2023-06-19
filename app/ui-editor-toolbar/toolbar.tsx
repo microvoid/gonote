@@ -1,7 +1,7 @@
 import * as Toolbar from "@radix-ui/react-toolbar";
 import { QuoteIcon, CodeIcon, ImageIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
-import { Toast } from "../ui-toast";
+import { ToolbarImageToast } from "../ui-toast";
 import { useInlineTools, useToolbarActions } from "./useToolbarActions";
 
 export type EditorToolbarProps = React.PropsWithChildren;
@@ -44,6 +44,7 @@ export function ToolbarBtn() {
         aria-label="image block"
         onClick={() => {
           setCommingSoonToastOpen(false);
+
           setTimeout(() => {
             setCommingSoonToastOpen(true);
           }, 100);
@@ -52,12 +53,11 @@ export function ToolbarBtn() {
         <ImageIcon />
       </Toolbar.ToggleItem>
 
-      <Toast
+      <ToolbarImageToast
+        title="Comming Soon"
         open={isCommingSoonToastOpen}
         onOpenChange={setCommingSoonToastOpen}
-      >
-        Comming Soon
-      </Toast>
+      ></ToolbarImageToast>
     </Toolbar.ToggleGroup>
   );
 }
