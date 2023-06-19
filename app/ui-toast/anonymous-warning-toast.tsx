@@ -3,22 +3,35 @@
 import * as React from "react";
 import * as Toast from "@radix-ui/react-toast";
 import { useSession } from "next-auth/react";
+import useLocationStorage from "use-local-storage";
 
 export const AnonymouseWarningToast = () => {
+  const [isOpened, setIsAlreadyOpened] = useLocationStorage(
+    "AnonymouseWarningToast.open",
+    false
+  );
+
   const [open, setOpen] = React.useState(false);
   const session = useSession();
 
   React.useEffect(() => {
+    if (isOpened) {
+      return;
+    }
+
     if (session.data?.user?.name === "anonymous") {
       setOpen(true);
     }
-  }, [session]);
+  }, [session, isOpened]);
 
   return (
     <Toast.Root
       className="bg-white rounded-md shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] p-[15px] grid [grid-template-areas:_'title_action'_'description_action'] grid-cols-[auto_max-content] gap-x-[15px] items-center data-[state=open]:animate-slideIn data-[state=closed]:animate-hide data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=cancel]:translate-x-0 data-[swipe=cancel]:transition-[transform_200ms_ease-out] data-[swipe=end]:animate-swipeOut"
       open={open}
-      onOpenChange={setOpen}
+      onOpenChange={open => {
+        setIsAlreadyOpened(true);
+        setOpen(open);
+      }}
       duration={3000}
     >
       <Toast.Title className="[grid-area:_title] mb-[5px] font-medium text-slate12 text-[15px]">
