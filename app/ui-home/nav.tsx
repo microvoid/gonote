@@ -26,12 +26,12 @@ export function Nav() {
           <HomeIcon />
         </Link>
 
-        <Link
+        {/* <Link
           href="/register"
           className="rounded-md cursor-pointer text-sm font-medium text-gray-500 transition-colors ease-out hover:text-black"
         >
           <AvatarIcon />
-        </Link>
+        </Link> */}
       </div>
     </div>
   );
