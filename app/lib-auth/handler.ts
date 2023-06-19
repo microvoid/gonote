@@ -1,13 +1,14 @@
-import { Session, getServerSession } from "next-auth";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 // import { Auth } from "@auth/core";
 // import Credentials from "@auth/core/providers/credentials";
 import { options } from "./options";
+import { Session } from "../types";
 
 type Authhandler = (req: Request, ctx: any, session: Session) => any;
 
 export const session = () => {
-  return getServerSession(options);
+  return getServerSession(options) as Promise<Session>;
 };
 
 // export const authWithGuestUser = (req: Request) => {

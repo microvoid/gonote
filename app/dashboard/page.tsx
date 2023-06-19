@@ -10,7 +10,7 @@ export default async function Dashboard() {
     return redirect("/home");
   }
 
-  const posts = await PostModel.getUserPosts(session!.user.id);
+  const posts = await PostModel.getUserPosts(session!.user?.id);
 
   return <PostDashboard defaultPosts={posts} />;
 }

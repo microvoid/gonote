@@ -1,7 +1,9 @@
 export interface Session {
   user: {
-    email: string;
     id: string;
     name: string;
+    email: string;
+    image: string;
   };
+  expires: string;
 }

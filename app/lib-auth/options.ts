@@ -62,13 +62,13 @@ export const options: NextAuthOptions = {
 
       if (account?.provider === "github") {
         const userExists = await prisma.user.findUnique({
-          where: { email: user.email },
+          where: { email: user.email! },
           select: { name: true },
         });
 
         if (userExists && !userExists.name && profile) {
           await prisma.user.update({
-            where: { email: user.email },
+            where: { email: user.email! },
             data: {
               name: profile.name,
               // @ts-ignore

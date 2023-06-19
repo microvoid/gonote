@@ -17,10 +17,10 @@ export function Providers({ children, session }: ProvidersProps) {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (pathname !== "/register") {
+    if (!session && pathname !== "/register") {
       signInWithGuest();
     }
-  }, []);
+  }, [pathname, session]);
 
   return (
     <SessionProvider session={session}>
