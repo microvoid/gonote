@@ -24,7 +24,7 @@ export function Providers({ children, session }: ProvidersProps) {
 
   return (
     <SessionProvider session={session}>
-      <Toast.Provider swipeDirection="right" duration={0}>
+      <Toast.Provider swipeDirection="right">
         <NextUIProvider>{children}</NextUIProvider>
 
         <Toast.Viewport className="[--viewport-padding:_25px] fixed top-0 right-0 flex flex-col p-[var(--viewport-padding)] gap-[10px] w-[390px] max-w-[100vw] m-0 list-none z-[2147483647] outline-none" />
