@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { ApiHandler } from "../lib-auth";
 import { PostModel } from "../model";
-import { Posts } from "../ui-post/post-list";
+import { PostDashboard } from "../ui-post/post-dashboard";
 
 export default async function Dashboard() {
   const session = await ApiHandler.session();
@@ -10,11 +10,7 @@ export default async function Dashboard() {
     return redirect("/home");
   }
 
-  const posts = await PostModel.getUserPosts(session!.user.id);
+  const posts = await PostModel.getUserPosts(session!.user?.id);
 
-  return (
-    <div className="p-5 mx-auto md:w-[768px]">
-      <Posts defaultPosts={posts} />
-    </div>
-  );
+  return <PostDashboard defaultPosts={posts} />;
 }

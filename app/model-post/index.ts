@@ -1,7 +1,18 @@
 import { prisma } from "../lib-prisma";
 
 export const getPostBySlug = async (slug: string) => {
-  return prisma.post.findFirst({
+  await prisma.post.update({
+    where: {
+      slug,
+    },
+    data: {
+      clicks: {
+        increment: 1,
+      },
+    },
+  });
+
+  const post = await prisma.post.findFirst({
     where: {
       slug,
     },
@@ -9,10 +20,22 @@ export const getPostBySlug = async (slug: string) => {
       user: true,
     },
   });
+
+  return post;
 };
 
-export const getUserPosts = async (userId: string) => {
+export const getUserPosts = async (
+  userId: string,
+  cursorId?: string,
+  take = 15
+) => {
   return prisma.post.findMany({
+    cursor: cursorId
+      ? {
+          id: cursorId,
+        }
+      : undefined,
+    take,
     where: {
       userId,
     },

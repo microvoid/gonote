@@ -10,6 +10,7 @@ import { createGuest } from "../model-user";
 const VERCEL_DEPLOYMENT = !!process.env.VERCEL_URL;
 
 export const options: NextAuthOptions = {
+  debug: true,
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_ID!,
@@ -42,7 +43,12 @@ export const options: NextAuthOptions = {
         sameSite: "lax",
         path: "/",
         // When working on localhost, the cookie domain must be omitted entirely (https://stackoverflow.com/a/1188145)
-        domain: VERCEL_DEPLOYMENT ? `.${process.env.DOMAIN}` : undefined,
+        domain: VERCEL_DEPLOYMENT
+          ? `.${process.env.NEXT_PUBLIC_DOMAIN?.replace(
+              /^(http|https):\/\//,
+              ""
+            )}`
+          : undefined,
         secure: VERCEL_DEPLOYMENT,
       },
     },
@@ -51,7 +57,27 @@ export const options: NextAuthOptions = {
     error: "/login",
   },
   callbacks: {
-    signIn({ user, account, profile }) {
+    async signIn({ user, account, profile }) {
+      console.log("auth", user, account, profile);
+
+      if (account?.provider === "github") {
+        const userExists = await prisma.user.findUnique({
+          where: { email: user.email! },
+          select: { name: true },
+        });
+
+        if (userExists && !userExists.name && profile) {
+          await prisma.user.update({
+            where: { email: user.email! },
+            data: {
+              name: profile.name,
+              // @ts-ignore
+              image: profile["avatar_url"],
+            },
+          });
+        }
+      }
+
       return true;
     },
 

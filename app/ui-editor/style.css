@@ -3,10 +3,30 @@
 
 .remirror-editor-wrapper {
   height: 100%;
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+.remirror-editor-wrapper {
+  padding-bottom: 46px;
 }
 
 .remirror-editor-wrapper .prose {
   max-width: none; 
+}
+
+.remirror-editor-wrapper .prose blockquote p:first-of-type::before {
+  content: none;
+}
+.remirror-editor-wrapper .prose blockquote p:last-of-type::after {
+  content: none;
+}
+.remirror-editor-wrapper .prose tbody th p {
+  font-weight: 600;
+}
+
+.remirror-editor-wrapper hr.ProseMirror-selectednode {
+  @apply outline-2 outline-violet-400 outline;
 }
 
 .remirror-editor-wrapper .remirror-is-empty:first-of-type::before {
@@ -15,4 +35,64 @@
   pointer-events: none;
   height: 0;
   content: attr(data-placeholder);
+}
+
+.remirror-task-list li > div {
+  display: inline-block;
+  margin: 0;
+}
+
+.remirror-task-list p {
+  margin: 0;
+}
+
+.prose {
+  & :where(code):not(:where([class~="not-prose"] *)) {
+    padding: 2px 8px;
+    border-radius: var(--rounded-badge);
+  }
+  & code:after,
+  & code:before {
+    content: none;
+  }
+
+  pre {
+    code {
+      border-radius: 0;
+      padding: 0;
+    }
+  }
+
+  & :where(blockquote p):not(:where([class~="not-prose"] *))::before,
+  & :where(blockquote p):not(:where([class~="not-prose"] *))::after {
+    content: none;
+  }
+
+  & :where(tbody th):not(:where([class~="not-prose"] *)) {
+    border-bottom: 1px solid red;
+  }
+}
+
+.remirror-task-list .remirror-list-item-marker-container {
+  margin-right: 10px;
+}
+
+.remirror-task-list [data-task-list-item][data-checked] p {
+  text-decoration: line-through;
+}
+
+.rc-menu {
+  @apply text-[12px] py-1 rounded-md bg-white;
+}
+
+.rc-menu-item {
+  @apply relative overflow-hidden;
+}
+
+.rc-menu-item, .rc-menu-submenu-title {
+  @apply flex items-center px-3 py-1 text-violet11;
+}
+
+.rc-menu-item-active {
+  @apply bg-primary text-primary-foreground;
 }

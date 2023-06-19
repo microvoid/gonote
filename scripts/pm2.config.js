@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "marktion",
+      name: "gonote",
       script: "npm",
       args: "run start",
       autorestart: true,
