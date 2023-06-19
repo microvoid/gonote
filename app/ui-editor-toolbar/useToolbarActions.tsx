@@ -151,7 +151,7 @@ export function useToolbarActions() {
       toggle: () => {
         if (createTable.enabled()) {
           const cellContent = ctx.schema.nodes.paragraph.create({ level: 3 }, [
-            ctx.schema.text("cell"),
+            ctx.schema.text("-"),
           ]);
 
           createTable({
