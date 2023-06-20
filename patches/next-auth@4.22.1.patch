@@ -1,0 +1,13 @@
+diff --git a/core/lib/callback-handler.js b/core/lib/callback-handler.js
+index 9316bd073aca0110088141c0a97a381f5ebffb96..03cc32487d0655e253c97c869149047a53b57a3c 100644
+--- a/core/lib/callback-handler.js
++++ b/core/lib/callback-handler.js
+@@ -132,7 +132,7 @@ async function callbackHandler(params) {
+           };
+         }
+ 
+-        throw new _errors.AccountNotLinkedError("The account is already associated with another user");
++        // throw new _errors.AccountNotLinkedError("The account is already associated with another user");
+       }
+ 
+       session = useJwtSession ? {} : await createSession({

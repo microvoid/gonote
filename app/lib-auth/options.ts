@@ -1,12 +1,10 @@
 import { NextAuthOptions } from "next-auth";
 import GithubProvider, { GithubProfile } from "next-auth/providers/github";
-import EmailProvider from "next-auth/providers/email";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "@/app/model";
-import { sendRegisterEmail } from "@/app/email";
-import { createGuest } from "../model-user";
 import { User } from "@prisma/client";
+import { createGuest } from "../model-user";
 import { linkAnonymouseUser } from "../service-user";
 
 const VERCEL_DEPLOYMENT = !!process.env.VERCEL_URL;
@@ -26,14 +24,6 @@ export const options: NextAuthOptions = {
         return user;
       },
     }),
-    // EmailProvider({
-    //   sendVerificationRequest({ identifier, url }) {
-    //     sendRegisterEmail({
-    //       to: identifier,
-    //       url,
-    //     });
-    //   },
-    // }),
   ],
   adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt" },
@@ -114,15 +104,13 @@ export const options: NextAuthOptions = {
     },
     session: async ({ session, token }) => {
       session.user = token["user"] as User;
-
+      
       return session;
     },
   },
 
   events: {
     async linkAccount(message) {
-      console.log("linkAccount", message);
-
       const user = message.user as User;
       const profile = message.profile as User;
 
