@@ -27,7 +27,7 @@ export function Nav() {
         </Link>
 
         <Link
-          href="/register"
+          href="/login"
           className="rounded-md cursor-pointer text-sm font-medium text-gray-500 transition-colors ease-out hover:text-black"
         >
           <AvatarIcon />

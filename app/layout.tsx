@@ -1,4 +1,5 @@
 import "./globals.css";
+import "./ui-editor/style.css";
 
 import { Inter } from "next/font/google";
 import { headers, cookies } from "next/headers";

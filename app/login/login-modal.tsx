@@ -1,17 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { useSearchParams } from "next/navigation";
-import BlurImage from "./blur-image";
 import { Button } from "../ui-button";
 import { siteConstants } from "../constants";
 
-export function RegisterModal() {
-  const { next } = useSearchParams() as { next?: string };
+export function LoginModal() {
+  const params = useSearchParams();
   const [loading, setLoading] = useState(false);
+  const callback = params.get("callback") || "/dashboard";
 
   return (
     <div className="z-10 mt-[calc(30vh)] h-fit w-full max-w-md overflow-hidden border border-gray-100 sm:rounded-2xl sm:shadow-xl">
@@ -22,16 +21,8 @@ export function RegisterModal() {
               ? siteConstants.domain
               : "http://localhost:3000"
           }
-        >
-          {/* <BlurImage
-            src="/_static/logo.png"
-            alt="Dub.sh logo"
-            className="h-10 w-10 rounded-full"
-            width={20}
-            height={20}
-          /> */}
-        </a>
-        <h3 className="text-xl font-semibold">Create your Gonote account</h3>
+        ></a>
+        <h3 className="text-xl font-semibold">Login Gonote</h3>
         <p className="text-sm text-gray-500">
           Get started for free. No credit card required.
         </p>
@@ -43,22 +34,12 @@ export function RegisterModal() {
           onClick={() => {
             setLoading(true);
             signIn("github", {
-              ...(next && next.length > 0 ? { callbackUrl: next } : {}),
+              callbackUrl: callback,
             });
           }}
           loading={loading}
           icon={<GitHubLogoIcon className="h-4 w-4" />}
         />
-        <p className="text-center text-sm text-gray-500">
-          Already have an account?{" "}
-          <Link
-            href="/login"
-            className="font-semibold text-gray-500 transition-colors hover:text-black"
-          >
-            Sign in
-          </Link>
-          .
-        </p>
       </div>
     </div>
   );

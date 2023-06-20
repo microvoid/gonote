@@ -1,16 +1,18 @@
 import { NextAuthOptions } from "next-auth";
-import GithubProvider from "next-auth/providers/github";
+import GithubProvider, { GithubProfile } from "next-auth/providers/github";
 import EmailProvider from "next-auth/providers/email";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "@/app/model";
 import { sendRegisterEmail } from "@/app/email";
 import { createGuest } from "../model-user";
+import { User } from "@prisma/client";
+import { linkAnonymouseUser } from "../service-user";
 
 const VERCEL_DEPLOYMENT = !!process.env.VERCEL_URL;
 
 export const options: NextAuthOptions = {
-  debug: true,
+  // debug: true,
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_ID!,
@@ -57,21 +59,20 @@ export const options: NextAuthOptions = {
     error: "/login",
   },
   callbacks: {
-    async signIn({ user, account, profile }) {
-      console.log("auth", user, account, profile);
+    async signIn(params) {
+      const { user, account } = params;
 
-      if (account?.provider === "github") {
+      if (account?.provider === "github" && user.email) {
+        const profile = params.profile as GithubProfile;
         const userExists = await prisma.user.findUnique({
           where: { email: user.email! },
-          select: { name: true },
         });
 
-        if (userExists && !userExists.name && profile) {
+        if (userExists && profile) {
           await prisma.user.update({
             where: { email: user.email! },
             data: {
               name: profile.name,
-              // @ts-ignore
               image: profile["avatar_url"],
             },
           });
@@ -81,12 +82,24 @@ export const options: NextAuthOptions = {
       return true;
     },
 
-    jwt: async ({ token, user, trigger, session }) => {
+    jwt: async params => {
+      const { token, account, trigger } = params;
+      const user = params.user as User;
+
       if (user) {
         token.user = user;
       }
 
-      if (trigger === "update") {
+      const isUpdateIn = trigger === "update";
+      /**
+       * When an anonymouse user login, update token.
+       */
+      const isLinkAnonymouseSignIn =
+        trigger === "signIn" &&
+        account?.provider === "github" &&
+        user.anonymous;
+
+      if (isUpdateIn || isLinkAnonymouseSignIn) {
         const refreshedUser = await prisma.user.findUnique({
           where: { id: token.sub },
         });
@@ -100,12 +113,22 @@ export const options: NextAuthOptions = {
       return token;
     },
     session: async ({ session, token }) => {
-      session.user = {
-        // @ts-ignore
-        id: token.sub,
-        ...session.user,
-      };
+      session.user = token["user"] as User;
+
       return session;
+    },
+  },
+
+  events: {
+    async linkAccount(message) {
+      console.log("linkAccount", message);
+
+      const user = message.user as User;
+      const profile = message.profile as User;
+
+      if (user.anonymous) {
+        await linkAnonymouseUser(user, profile);
+      }
     },
   },
 };
