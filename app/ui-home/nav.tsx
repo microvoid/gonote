@@ -25,13 +25,14 @@ export function Nav() {
       {loginUser?.name}
     </Link>
   );
+
   const loginUserDropDown = !loginUser?.anonymous && (
     <LoginUserHoverCard>
       <div className="inline-flex items-center rounded-md cursor-pointer text-sm font-medium text-gray-500 transition-colors ease-out hover:text-black">
         <Avatar.Root className="mr-1 inline-flex select-none items-center justify-center overflow-hidden rounded-full align-middle">
           <Avatar.Image
             className="h-[20px] w-[20px] rounded-[inherit] object-cover"
-            src={loginUser!.image || ""}
+            src={loginUser?.image || ""}
             alt="Colm Tuite"
           />
           <Avatar.Fallback
