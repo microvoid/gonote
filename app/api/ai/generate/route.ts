@@ -3,7 +3,7 @@ import { OpenAIStream, StreamingTextResponse } from "ai";
 import { rateLimit } from "@/app/utils/rate-limit";
 
 const config = new Configuration({
-  basePath: "https://api-open-ai.microvoid.io",
+  basePath: process.env.OPENAI_BASE_PATH,
   apiKey: process.env.OPENAI_API_KEY,
 });
 
