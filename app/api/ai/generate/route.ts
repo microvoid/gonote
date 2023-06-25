@@ -9,8 +9,6 @@ const config = new Configuration({
 
 const openai = new OpenAIApi(config);
 
-// export const runtime = "edge";
-
 const limiter = rateLimit({
   interval: 24 * 60 * 60 * 1000,
 });
