@@ -230,8 +230,6 @@ function PostLink({
 }) {
   const postUrl = post ? `${location.origin}/m/${post.slug}` : "";
 
-  console.log("post", post);
-
   if (post?.publicStats === "public") {
     const { base } = popover();
 

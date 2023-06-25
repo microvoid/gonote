@@ -12,7 +12,7 @@ import {
   ListChecksIcon,
   ListOrderedIcon,
 } from "lucide-react";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import {
   BorderBottomIcon,
   BorderLeftIcon,
@@ -28,7 +28,50 @@ import {
   TableIcon,
   TextIcon,
 } from "@radix-ui/react-icons";
+import { useCompletion } from "ai/react";
 import { MarktionExtension } from "../ui-editor-extensions/extensions";
+
+let btn = true;
+
+function useAI() {
+  const { complete, completion, isLoading, stop } = useCompletion({
+    id: "novel",
+    api: "/api/ai/generate",
+    onResponse: response => {
+      console.log("response", response);
+
+      if (response.status === 429) {
+        // toast.error("You have reached your request limit for the day.");
+        // va.track("Rate Limit Reached");
+
+        return;
+      }
+    },
+    onFinish: (prompt, completion) => {
+      console.log(prompt, completion);
+
+      // editor?.commands.setTextSelection({
+      //   from: editor.state.selection.from - completion.length,
+      //   to: editor.state.selection.from,
+      // });
+    },
+    onError: () => {
+      // toast.error("Something went wrong.");
+    },
+  });
+
+  console.log({
+    completion,
+    isLoading,
+  });
+
+  useEffect(() => {
+    if (btn) {
+      btn = false;
+      complete("Gonote 是一个所见即所得 markdown 编辑器, 帮我继续编写");
+    }
+  }, [complete]);
+}
 
 export function useToolbarActions() {
   const ctx = useRemirrorContext();
@@ -43,6 +86,8 @@ export function useToolbarActions() {
     toggleTaskList,
     createTable,
   } = useCommands<MarktionExtension | ParagraphExtension>();
+
+  useAI();
 
   const active = useActive<MarktionExtension | ParagraphExtension>();
 
