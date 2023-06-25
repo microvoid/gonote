@@ -11,11 +11,14 @@ import { signOut } from "next-auth/react";
 import { useSessionUser } from "../ui-hooks/useSessionUser";
 import { siteConstants } from "../constants";
 import { useUserInfo } from "../ui-hooks/useUserInfo";
+import { usePathname, useRouter } from "next/navigation";
 
 const brand = siteConstants.brand.toUpperCase();
 
 export function Nav() {
   const loginUser = useSessionUser();
+  const pathname = usePathname();
+  const router = useRouter();
 
   const loginLinkIcon = (!loginUser || loginUser?.anonymous) && (
     <Link
@@ -28,24 +31,27 @@ export function Nav() {
   );
 
   const loginUserDropDown = !loginUser?.anonymous && (
-    <LoginUserHoverCard>
-      <div className="inline-flex items-center rounded-md cursor-pointer text-sm font-medium text-gray-500 transition-colors ease-out hover:text-black">
-        <Avatar.Root className="mr-1 inline-flex select-none items-center justify-center overflow-hidden rounded-full align-middle">
+    <div
+      onClick={() => router.push("/dashboard")}
+      className="inline-flex items-center rounded-md cursor-pointer text-sm font-medium text-gray-500 transition-colors ease-out hover:text-black"
+    >
+      <Avatar.Root className="mr-1 inline-flex select-none items-center justify-center overflow-hidden rounded-full align-middle">
+        <LoginUserHoverCard>
           <Avatar.Image
             className="h-[20px] w-[20px] rounded-[inherit] object-cover"
             src={loginUser?.image || ""}
             alt="Colm Tuite"
           />
-          <Avatar.Fallback
-            className="text-violet11 leading-1 flex h-[20px] w-[20px] items-center justify-center bg-white text-[15px] font-medium"
-            delayMs={600}
-          >
-            <AvatarIcon className="mr-1" />
-          </Avatar.Fallback>
-        </Avatar.Root>
-        {loginUser?.name}
-      </div>
-    </LoginUserHoverCard>
+        </LoginUserHoverCard>
+        <Avatar.Fallback
+          className="text-violet11 leading-1 flex h-[20px] w-[20px] items-center justify-center bg-white text-[15px] font-medium"
+          delayMs={600}
+        >
+          <AvatarIcon className="mr-1" />
+        </Avatar.Fallback>
+      </Avatar.Root>
+      {loginUser?.name}
+    </div>
   );
 
   return (
@@ -58,13 +64,15 @@ export function Nav() {
       </Link>
 
       <div className="items-center space-x-4 sm:flex">
-        <Link
-          href="/dashboard"
-          className="inline-flex items-center rounded-md text-sm font-medium text-gray-500 transition-colors ease-out hover:text-black"
-          title="dashboard"
-        >
-          <HomeIcon />
-        </Link>
+        {pathname !== "/" && pathname !== "/home" && (
+          <Link
+            href="/home"
+            className="inline-flex items-center rounded-md text-sm font-medium text-gray-500 transition-colors ease-out hover:text-black"
+            title="home"
+          >
+            <HomeIcon />
+          </Link>
+        )}
 
         {loginLinkIcon}
         {loginUserDropDown}
