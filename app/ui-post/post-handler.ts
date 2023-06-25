@@ -7,6 +7,7 @@ export enum HandlerKey {
   download,
   delete,
   commit,
+  public,
 }
 
 export async function handler(key: HandlerKey, post: Post) {
@@ -15,6 +16,8 @@ export async function handler(key: HandlerKey, post: Post) {
       return download(post);
     case HandlerKey.delete:
       return delPost(post.id);
+    case HandlerKey.public:
+      return setPublic(post.id);
   }
 }
 
@@ -31,6 +34,17 @@ export async function delPost(id: string) {
     method: "delete",
     data: {
       id,
+    },
+  });
+}
+
+async function setPublic(id: string) {
+  await fetch({
+    url: "/api/post",
+    method: "post",
+    data: {
+      id,
+      publicStats: "public",
     },
   });
 }

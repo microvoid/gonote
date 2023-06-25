@@ -37,6 +37,7 @@ export default async function Home() {
 
       <div className="p-5 mx-auto w-full md:w-[768px]">
         <ShareEditor
+          publicStats="public"
           initialContent={initialContent}
           classNames={["min-h-[200px]"]}
         />

@@ -20,7 +20,9 @@ export function PostDashboard({ defaultPosts = [] }: PostsProps) {
   const onSelectMenu: typeof handler = useCallback(async (key, menu) => {
     await handler(key, menu);
 
-    if ([HandlerKey.delete, HandlerKey.commit].includes(key)) {
+    if (
+      [HandlerKey.delete, HandlerKey.commit, HandlerKey.public].includes(key)
+    ) {
       await onRefreshPosts();
     }
   }, []);

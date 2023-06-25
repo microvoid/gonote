@@ -2,7 +2,8 @@
 
 import fetch from "axios";
 import * as Toolbar from "@radix-ui/react-toolbar";
-import { useCallback, useMemo, useRef, useState } from "react";
+import * as Tooltip from "@radix-ui/react-tooltip";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { debounce } from "lodash";
 import { Post } from "@prisma/client";
 import {
@@ -10,7 +11,9 @@ import {
   ClockIcon,
   DotsHorizontalIcon,
   PaperPlaneIcon,
+  GlobeIcon,
 } from "@radix-ui/react-icons";
+import { link, popover } from "@nextui-org/theme";
 import {
   MarkdownEditorProps,
   MarkdownEditorRef,
@@ -24,6 +27,7 @@ import { HandlerKey } from "./post-handler";
 
 export type ShareEditorProps = MarkdownEditorProps & {
   defaultPost?: Post;
+  publicStats?: "public" | "private";
   toolbarProps?: {
     onSelectMenu?: PostDropmenuProps["onSelectMenu"];
     isCommitBtnShow?: EditorToolbarProps["isCommitBtnShow"];
@@ -34,6 +38,7 @@ export function ShareEditor({
   defaultPost,
   initialContent,
   toolbarProps,
+  publicStats = "private",
   ...editorProps
 }: ShareEditorProps) {
   const editorRef = useRef<MarkdownEditorRef>(null);
@@ -45,6 +50,12 @@ export function ShareEditor({
 
   initialContent = post?.markdown || initialContent;
 
+  useEffect(() => {
+    if (defaultPost?.id === post?.id) {
+      setPost(defaultPost);
+    }
+  }, [defaultPost, post]);
+
   const onUpdateOrCreatePost = useMemo(
     () =>
       debounce(async (markdown: string, title: Post["title"]) => {
@@ -55,6 +66,7 @@ export function ShareEditor({
             url: "/api/post",
             method: "post",
             data: {
+              publicStats,
               title,
               id: postId,
               markdown,
@@ -86,6 +98,12 @@ export function ShareEditor({
     }
   }, [toolbarProps, post]);
 
+  const onPublicPost = useCallback(async () => {
+    if (post) {
+      toolbarProps?.onSelectMenu?.(HandlerKey.public, post);
+    }
+  }, [post, toolbarProps]);
+
   const onFocus = useCallback(() => {
     setFocus(true);
   }, []);
@@ -116,6 +134,7 @@ export function ShareEditor({
         isSaving={isSaving}
         isFocus={isFocus}
         onCommit={onCommit}
+        onPublicPost={onPublicPost}
         {...toolbarProps}
       />
     </MarktionEditor>
@@ -128,6 +147,7 @@ type EditorToolbarProps = {
   isFocus: boolean;
   isCommitBtnShow?: boolean;
   onSelectMenu?: PostDropmenuProps["onSelectMenu"];
+  onPublicPost?: () => void;
   onCommit?: () => void;
 };
 
@@ -138,52 +158,45 @@ function EditorToolbar({
   isCommitBtnShow,
   onSelectMenu,
   onCommit,
+  onPublicPost,
 }: EditorToolbarProps) {
-  const postUrl = post ? `${location.origin}/m/${post.slug}` : null;
+  const commitBtnEl = post && isCommitBtnShow && (
+    <Toolbar.Button
+      onClick={onCommit}
+      className="bg-transparent text-mauve11 inline-flex justify-center items-center hover:bg-transparent hover:cursor-pointer flex-shrink-0 flex-grow-0 basis-auto h-[25px] px-[5px] rounded text-[13px] leading-none  ml-0.5 outline-none hover:bg-violet3 hover:text-violet11 focus:relative focus:shadow-[0_0_0_2px] focus:shadow-violet7 first:ml-0 data-[state=on]:bg-secondary data-[state=on]:text-secondary-content"
+      title="export as markdown file"
+    >
+      <PaperPlaneIcon />
+    </Toolbar.Button>
+  );
+
+  const settingEl = post && (
+    <PostDropmenu post={post} onSelectMenu={onSelectMenu}>
+      <Toolbar.Button
+        className="bg-transparent text-mauve11 inline-flex justify-center items-center hover:bg-transparent hover:cursor-pointer flex-shrink-0 flex-grow-0 basis-auto h-[25px] px-[5px] rounded text-[13px] leading-none  ml-0.5 outline-none hover:bg-violet3 hover:text-primary focus:relative focus:shadow-[0_0_0_2px] focus:shadow-violet7 first:ml-0 data-[state=on]:bg-secondary data-[state=on]:text-secondary-content"
+        title="export as markdown file"
+      >
+        <DotsHorizontalIcon />
+      </Toolbar.Button>
+    </PostDropmenu>
+  );
 
   const toolbarSuffixNode = (
     <>
       <div className="flex items-center">
-        {(isSaving || postUrl) && (
+        {(isSaving || post) && (
           <Toolbar.Separator className="w-[1px] h-full bg-mauve6 mx-[10px]" />
         )}
 
-        {postUrl && (
-          <>
-            <Toolbar.Link
-              className="bg-transparent text-mauve11 inline-flex justify-center items-center hover:bg-transparent hover:cursor-pointer flex-shrink-0 flex-grow-0 basis-auto h-[25px] px-[5px] rounded text-[13px] leading-none  ml-0.5 outline-none hover:bg-violet3 hover:text-violet11 focus:relative focus:shadow-[0_0_0_2px] focus:shadow-violet7 first:ml-0 data-[state=on]:bg-secondary data-[state=on]:text-secondary-content"
-              href={postUrl}
-              target="_blank"
-            >
-              {postUrl}
-            </Toolbar.Link>
-          </>
-        )}
+        {post && <PostLink post={post} onPublicPost={onPublicPost} />}
 
         {isSaving && <UpdateIcon className="animate-spin" />}
       </div>
 
       <div className="ml-auto">
-        {post && isCommitBtnShow && (
-          <Toolbar.Button
-            onClick={onCommit}
-            className="bg-transparent text-mauve11 inline-flex justify-center items-center hover:bg-transparent hover:cursor-pointer flex-shrink-0 flex-grow-0 basis-auto h-[25px] px-[5px] rounded text-[13px] leading-none  ml-0.5 outline-none hover:bg-violet3 hover:text-violet11 focus:relative focus:shadow-[0_0_0_2px] focus:shadow-violet7 first:ml-0 data-[state=on]:bg-secondary data-[state=on]:text-secondary-content"
-            title="export as markdown file"
-          >
-            <PaperPlaneIcon />
-          </Toolbar.Button>
-        )}
+        {commitBtnEl}
 
-        {post && (
-          <PostDropmenu post={post} onSelectMenu={onSelectMenu}>
-            <Toolbar.Button
-              className="bg-transparent text-mauve11 inline-flex justify-center items-center hover:bg-transparent hover:cursor-pointer flex-shrink-0 flex-grow-0 basis-auto h-[25px] px-[5px] rounded text-[13px] leading-none  ml-0.5 outline-none hover:bg-violet3 hover:text-primary focus:relative focus:shadow-[0_0_0_2px] focus:shadow-violet7 first:ml-0 data-[state=on]:bg-secondary data-[state=on]:text-secondary-content"
-              title="export as markdown file"
-            >
-              <DotsHorizontalIcon />
-            </Toolbar.Button>
-          </PostDropmenu>
-        )}
+        {settingEl}
       </div>
     </>
   );
@@ -205,6 +218,63 @@ function PostMeta({ post }: { post: Post }) {
     <div className="text-mauve11 h-[26px] px-[5px] rounded inline-flex text-[13px] leading-none items-center justify-center  ml-0.5 outline-none first:ml-0">
       <ClockIcon className="mr-1 inline" /> {fromNow(post.updatedAt)}
     </div>
+  );
+}
+
+function PostLink({
+  post,
+  onPublicPost,
+}: {
+  post: Post;
+  onPublicPost?: () => void;
+}) {
+  const postUrl = post ? `${location.origin}/m/${post.slug}` : "";
+
+  console.log("post", post);
+
+  if (post?.publicStats === "public") {
+    const { base } = popover();
+
+    return (
+      <>
+        <Tooltip.Root>
+          <Tooltip.Trigger asChild>
+            <GlobeIcon className="mr-1 text-mauve11" />
+          </Tooltip.Trigger>
+          <Tooltip.Portal>
+            <Tooltip.Content className={base()} sideOffset={5}>
+              Public
+            </Tooltip.Content>
+          </Tooltip.Portal>
+        </Tooltip.Root>
+
+        <Toolbar.Link
+          className={link({
+            size: "xs",
+            underline: "always",
+          })}
+          href={postUrl}
+          target="_blank"
+        >
+          {postUrl}
+        </Toolbar.Link>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <div
+        onClick={onPublicPost}
+        className={link({
+          isDisabled: true,
+          size: "xs",
+          class: "cursor-pointer pointer-events-auto",
+        })}
+      >
+        {postUrl}
+      </div>
+    </>
   );
 }
 

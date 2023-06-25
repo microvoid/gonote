@@ -21,7 +21,6 @@ import {
 import { Post } from "@prisma/client";
 import { fromNow } from "../utils/time";
 import { downloadFile } from "../utils";
-import { siteConstants } from "../constants";
 
 export type PostsProps = {
   defaultPosts: Post[];

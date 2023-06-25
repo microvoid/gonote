@@ -5,13 +5,14 @@ import { ApiHandler } from "../lib-auth";
 import { PostModel } from "../model";
 
 export const upsertPost = ApiHandler.auth(async (req, ctx, session) => {
-  const { markdown, slug = nanoid(5), id, title } = (await req.json()) as Post;
+  const { markdown, slug = nanoid(5), id, title, publicStats } = (await req.json()) as Post;
 
   if (id) {
     const post = await prisma.post.update({
       data: {
         title,
         markdown,
+        publicStats
       },
       where: {
         id,
@@ -25,6 +26,7 @@ export const upsertPost = ApiHandler.auth(async (req, ctx, session) => {
         slug,
         title,
         markdown,
+        publicStats,
         userId: session.user.id,
       },
     });
