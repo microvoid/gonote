@@ -84,8 +84,8 @@ export function Nav() {
 type LoginUserHoverCardProps = React.PropsWithChildren;
 
 export function LoginUserHoverCard({ children }: LoginUserHoverCardProps) {
-  const loginUser = useSessionUser()!;
-  const { data: userInfo } = useUserInfo(loginUser.id);
+  const loginUser = useSessionUser();
+  const { data: userInfo } = useUserInfo(loginUser?.id);
 
   if (!loginUser) {
     return null;
