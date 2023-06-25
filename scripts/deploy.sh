@@ -3,6 +3,7 @@ set -e
 
 # build pkg
 pnpm i
+pnpm run prebuild
 pnpm run build
 
 # start
