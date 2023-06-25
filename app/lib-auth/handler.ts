@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 import { options } from "./options";
 import { Session } from "../types";
 
-type Authhandler = (req: Request, ctx: any, session: Session) => any;
+type Authhandler<T = any> = (req: Request, ctx: T, session: Session) => any;
 
 export const session = () => {
   return getServerSession(options) as Promise<Session>;
@@ -18,7 +18,7 @@ export const session = () => {
 // };
 
 export const auth =
-  (handler: Authhandler) => async (req: Request, ctx: any) => {
+  <T>(handler: Authhandler<T>) => async (req: Request, ctx: any) => {
     const userSession = await session();
 
     if (!userSession) {

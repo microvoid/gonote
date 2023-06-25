@@ -15,3 +15,30 @@ export async function linkAnonymouseUser(user: User, profile: User) {
     },
   });
 }
+
+export type UserInfoWithState = Awaited<ReturnType<typeof getUserInfoWithStats>>;
+
+export async function getUserInfoWithStats(id: string) {
+  const user = await prisma.user.findFirst({
+    where: {
+      id
+    }
+  });
+
+  if (!user) {
+    return null;
+  }
+
+  const postCount = await prisma.post.count({
+    where: {
+      userId: id
+    }
+  })
+
+  return {
+    user,
+    stats: {
+      postCount
+    }
+  }
+}

@@ -8,13 +8,14 @@ import Link from "next/link";
 import LOGO_URL from "@/public/logo.png";
 import { LogOutIcon } from "lucide-react";
 import { signOut } from "next-auth/react";
-import { useLoginUser } from "../ui-hooks/useSessionUser";
+import { useSessionUser } from "../ui-hooks/useSessionUser";
 import { siteConstants } from "../constants";
+import { useUserInfo } from "../ui-hooks/useUserInfo";
 
 const brand = siteConstants.brand.toUpperCase();
 
 export function Nav() {
-  const loginUser = useLoginUser();
+  const loginUser = useSessionUser();
 
   const loginLinkIcon = (!loginUser || loginUser?.anonymous) && (
     <Link
@@ -75,7 +76,8 @@ export function Nav() {
 type LoginUserHoverCardProps = React.PropsWithChildren;
 
 export function LoginUserHoverCard({ children }: LoginUserHoverCardProps) {
-  const loginUser = useLoginUser()!;
+  const loginUser = useSessionUser()!;
+  const { data: userInfo } = useUserInfo(loginUser.id);
 
   if (!loginUser) {
     return null;
@@ -124,7 +126,7 @@ export function LoginUserHoverCard({ children }: LoginUserHoverCardProps) {
               <div className="flex gap-[15px]">
                 <div className="flex gap-[5px]">
                   <div className="text-mauve12 m-0 text-[15px] font-medium leading-[1.5]">
-                    0
+                    {userInfo?.stats.postCount || 0}
                   </div>{" "}
                   <div className="text-mauve10 m-0 text-[15px] leading-[1.5]">
                     Posts
